@@ -7,13 +7,14 @@ import { BobHandoffSection } from '@/components/bob-handoff-section';
 import { AITipsChatbot } from '@/components/ai-tips-chatbot';
 import { PopularSearches } from '@/components/popular-searches';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { BobIcon } from '@/components/bob-icon';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Zap, Code2, Rocket, CheckCircle2 } from 'lucide-react';
 import type { GenerateResponse } from '@/lib/types';
 
 export default function Home() {
-  const [results, setResults] = useState<GenerateResponse[]>([]);
+  const [results, setResults] = useState<(GenerateResponse & { fromCache?: boolean })[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [prompt, setPrompt] = useState('');
   const [method, setMethod] = useState<'GET' | 'POST' | 'PUT' | 'DELETE'>('GET');
@@ -63,8 +64,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg ibm-gradient animate-pulse">
-                <Zap className="h-6 w-6 text-white" />
+              <div className="p-2 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                <BobIcon className="h-10 w-10" />
               </div>
               <div>
                 <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gradient-animate">
@@ -120,10 +121,20 @@ export default function Home() {
               <div className="bg-primary/10 border-2 border-primary/30 rounded-xl p-4 animate-in fade-in slide-in-from-top-2 duration-500">
                 <div className="flex items-center gap-3">
                   <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
-                  <div>
-                    <p className="font-semibold text-foreground">Your mock is ready! 🎉</p>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="font-semibold text-foreground">Your mock is ready! 🎉</p>
+                      {latest.fromCache && (
+                        <Badge variant="secondary" className="text-xs bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20">
+                          ⚡ Instant (Cached)
+                        </Badge>
+                      )}
+                    </div>
                     <p className="text-sm text-muted-foreground mt-0.5">
-                      Check the details below and hand off to IBM Bob on the right
+                      {latest.fromCache
+                        ? 'Served from cache for instant results • Hand off to IBM Bob on the right'
+                        : 'Check the details below and hand off to IBM Bob on the right'
+                      }
                     </p>
                   </div>
                 </div>
@@ -208,7 +219,7 @@ export default function Home() {
           <div className="flex items-center justify-center gap-2">
             <p className="font-medium">Built using</p>
             <span className="font-bold ibm-text-gradient">IBM Bob</span>
-            <span className="text-lg" role="img" aria-label="robot" style={{ filter: 'none' }}>🤖</span>
+            <BobIcon className="h-6 w-6" />
           </div>
           <div className="flex items-center justify-center gap-2">
             <span>Powered by</span>
