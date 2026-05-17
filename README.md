@@ -2,6 +2,8 @@
 
 > Development accelerated. Describe an endpoint, get a live mock URL and a Bob-ready code scaffold instantly — in your language of choice.
 
+![BobBridge Hero Image](nanobanana-output/a_professional_hightech_169_cove.png)
+
 **Dynamic Framework Display**: The hero section features an animated typing effect that cycles through all 9 supported frameworks, showcasing the multi-language capabilities.
 
 **Built by IBM Bob** for the lablab.ai IBM Bob hackathon (May 15–17, 2026).
