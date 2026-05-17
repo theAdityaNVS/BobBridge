@@ -8,11 +8,27 @@
 
 **Built by IBM Bob** for the lablab.ai IBM Bob hackathon (May 15–17, 2026).
 
-## What it does
+## How it Works
 
-Plain-English prompt → IBM watsonx.ai (Granite/Llama/Mistral models) → strict-JSON contract → in-memory mock served at `/api/mock/{id}` + framework-specific code scaffold + ready-to-paste IBM Bob prompt.
+### 1. Describe your API
+Describe the endpoint you need in plain English. Choose from multiple IBM watsonx.ai models and 9+ target languages.
+![Step 1 - Initial State](demo-screenshots/1-initial-dark.png)
 
-**The thesis:** BobBridge produces the contract; IBM Bob (a VS Code fork with AI capabilities, similar to Antigravity) implements the system.
+### 2. Choose a Template or Type your Prompt
+Use popular templates to get started quickly or type your custom requirements.
+![Step 2 - Selected State](demo-screenshots/2-selected-dark.png)
+
+### 3. Generate with IBM watsonx.ai
+Watch as BobBridge orchestrates the generation of a strict JSON contract, a live mock endpoint, and framework-specific boilerplate.
+![Step 3 - Generating State](demo-screenshots/3-generating-dark.png)
+
+### 4. Instant Mock & Code
+Get a live URL you can use in your frontend immediately. Copy the generated code scaffold for your backend.
+![Step 4 - Result State](demo-screenshots/4-result-dark.png)
+
+### 5. Seamless Handoff to IBM Bob
+Use the dedicated IBM Bob Bridge section to copy the implementation prompt and launch IBM Bob to build the full system.
+![Step 5 - Bob Handoff](demo-screenshots/6-bob-handoff-focus-dark.png)
 
 ## Supported Languages & Frameworks
 
