@@ -1,17 +1,32 @@
 # BobBridge
 
-> Development accelerated. Describe an endpoint, get a live mock URL and a Bob-ready Spring Boot scaffold instantly.
+> Development accelerated. Describe an endpoint, get a live mock URL and a Bob-ready code scaffold instantly — in your language of choice.
 
 **Built by IBM Bob** for the lablab.ai IBM Bob hackathon (May 15–17, 2026).
 
 ## What it does
 
-Plain-English prompt → IBM watsonx.ai (Granite/Llama/Mistral models) → strict-JSON contract → in-memory mock served at `/api/mock/{id}` + Spring Boot controller scaffold + ready-to-paste IBM Bob prompt.
+Plain-English prompt → IBM watsonx.ai (Granite/Llama/Mistral models) → strict-JSON contract → in-memory mock served at `/api/mock/{id}` + framework-specific code scaffold + ready-to-paste IBM Bob prompt.
 
 **The thesis:** BobBridge produces the contract; IBM Bob (a VS Code fork with AI capabilities, similar to Antigravity) implements the system.
 
+## Supported Languages & Frameworks
+
+BobBridge now supports **9 programming languages** with their most popular frameworks:
+
+- ☕ **Java** - Spring Boot 3
+- 🐍 **Python** - FastAPI
+- 📜 **JavaScript** - Express.js
+- 📘 **TypeScript** - NestJS
+- 🐹 **Go** - Gin
+- 🦀 **Rust** - Axum
+- #️⃣ **C#** - ASP.NET Core
+- 🐘 **PHP** - Laravel
+- 💎 **Ruby** - Rails
+
 ## Key Features
 
+- 🌍 **Multi-Language Support**: Generate code in 9 popular languages with framework-specific implementations
 - 🎨 **IBM Branding**: Official IBM Blue color palette, IBM watsonx.ai logo, and design language throughout
 - 🤖 **IBM Bob Integration**: Dedicated handoff section with "Launch IBM Bob" and "Download IBM Bob" buttons
 - 🔒 **Input Guardrails**: Prevents generation of sensitive content (passwords, SQL queries, etc.)
@@ -20,7 +35,8 @@ Plain-English prompt → IBM watsonx.ai (Granite/Llama/Mistral models) → stric
 - 💡 **AI Tips Banner**: Rotating educational tips about features and best practices
 - ⚡ **Smart Auto-scroll**: Automatically scrolls to results with manual scroll adjustment
 - 🎯 **Model Selection**: Choose from 6 AI models (Granite, Llama, Mistral)
-- 📊 **Enhanced Results**: Display model used and region information
+- 📊 **Enhanced Results**: Display model used, language, and region information
+- 🎨 **Syntax Highlighting**: Language-specific code highlighting for all supported languages
 
 ## Quick start
 
@@ -88,11 +104,12 @@ BobBridge/
 │   └── ui/                           # shadcn primitives
 ├── lib/
 │   ├── watsonx.ts                    # IAM token + textChat wrapper
-│   ├── prompt.ts                     # system prompt template
+│   ├── prompt.ts                     # language-aware system prompts
 │   ├── parse.ts                      # robust JSON extraction
 │   ├── store.ts                      # in-memory Map
-│   ├── bob-handoff.ts                # IBM Bob prompt generator
-│   ├── types.ts                      # shared types (with region/model)
+│   ├── bob-handoff.ts                # language-aware Bob prompt generator
+│   ├── types.ts                      # shared types (with language support)
+│   ├── validation.ts                 # input validation and guardrails
 │   ├── env.ts                        # environment validation
 │   └── utils.ts                      # cn helper
 ├── scripts/

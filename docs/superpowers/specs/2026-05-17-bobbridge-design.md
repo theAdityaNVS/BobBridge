@@ -2,7 +2,7 @@
 
 **Date:** 2026-05-17
 **Hackathon:** lablab.ai IBM Bob Hackathon (May 15–17, 2026)
-**Status:** Implemented with comprehensive UI redesign
+**Status:** Implemented with comprehensive UI redesign + Multi-Language Support
 **Last Updated:** 2026-05-17
 **Time box:** 6–24 hours from spec approval
 
@@ -10,13 +10,16 @@
 
 ## 1. Problem & Thesis
 
-Frontend teams are routinely blocked waiting for backend endpoints. BobBridge eliminates that wait: a plain-English description of an endpoint becomes (a) a live mock URL serving realistic JSON within seconds and (b) a Spring Boot scaffold a backend developer — or **IBM Bob** — can pick up and implement.
+Frontend teams are routinely blocked waiting for backend endpoints. BobBridge eliminates that wait: a plain-English description of an endpoint becomes (a) a live mock URL serving realistic JSON within seconds and (b) a framework-specific code scaffold a backend developer — or **IBM Bob** — can pick up and implement.
 
 **Hybrid Bob framing (judging criterion alignment):**
 BobBridge does not call Bob directly. Instead, it produces a contract + scaffold + a ready-to-paste IBM Bob prompt. The narrative: **BobBridge generates the contract; IBM Bob (a VS Code fork with AI capabilities, similar to Antigravity) implements the system.** This satisfies "clear application of IBM Bob" without requiring Bob API access during the demo.
 
 **UI Enhancement (2026-05-17):**
 Comprehensive redesign with IBM branding, IBM watsonx.ai logo integration, dedicated Bob handoff section with 2-column layout, rotating AI tips banner, geographic region display, input validation guardrails, and professional terminology throughout. The interface now prominently features IBM watsonx.ai logo and IBM Bob branding with "Launch IBM Bob" and "Download IBM Bob" action buttons. Added security features to prevent generation of sensitive content.
+
+**Multi-Language Support (2026-05-17):**
+Extended beyond Java/Spring Boot to support 9 programming languages with their most popular frameworks: Java (Spring Boot), Python (FastAPI), JavaScript (Express.js), TypeScript (NestJS), Go (Gin), Rust (Axum), C# (ASP.NET Core), PHP (Laravel), and Ruby (Rails). Language-aware prompts, Bob handoff instructions, and syntax highlighting for all supported languages.
 
 ---
 
@@ -28,12 +31,13 @@ Comprehensive redesign with IBM branding, IBM watsonx.ai logo integration, dedic
 | Runtime | Node 22+ on Vercel Fluid Compute |
 | Styling | Tailwind CSS + shadcn/ui |
 | AI | `@ibm-cloud/watsonx-ai` Node SDK |
-| Model | `ibm/granite-3-3-8b-instruct` (current Granite; `granite-13b-chat-v2` is deprecated) |
+| Models | Multiple: Granite, Llama 3.2/3.3/4, Mistral (user-selectable) |
 | Auth | IBM Cloud IAM API key |
 | Storage | In-memory `Map<string, MockEntry>` (per function instance, ephemeral) |
-| Code highlighting | `shiki` (server-rendered, no client bundle bloat) |
+| Code highlighting | `prism-react-renderer` (client-side, multi-language support) |
 | ID generation | `nanoid` (8-char slugs) |
 | JSON robustness | `jsonrepair` (fallback parser) |
+| Languages | 9 supported: Java, Python, JS, TS, Go, Rust, C#, PHP, Ruby |
 | Deployment | Vercel |
 
 ---
@@ -41,13 +45,17 @@ Comprehensive redesign with IBM branding, IBM watsonx.ai logo integration, dedic
 ## 3. User Flow
 
 1. User lands on `/` and sees rotating AI tips banner with educational content and IBM watsonx.ai logo.
-2. Enters a plain-English endpoint description (validated for sensitive content), optionally selects HTTP method, path slug, and AI model.
+2. Enters a plain-English endpoint description (validated for sensitive content), selects:
+   - **Programming Language** (Java, Python, JavaScript, TypeScript, Go, Rust, C#, PHP, Ruby)
+   - HTTP method (GET/POST/PUT/DELETE)
+   - Path slug (optional)
+   - AI model (Granite, Llama, Mistral variants)
 3. Clicks **Generate Mock & Contract** (IBM gradient button). Loading state shows selected model name.
 4. ~3–8s later, page auto-scrolls to results showing **2-column layout** (on larger screens):
-   - **Left Column**: Mock endpoint with region badge (e.g., "us-south") and model information, JSON preview tab, Java boilerplate tab
+   - **Left Column**: Mock endpoint with language badge, region badge (e.g., "us-south"), and model information, JSON preview tab, language-specific code tab
    - **Right Column**: Dedicated Bob Handoff Section (appears with smooth animation after auto-scroll)
 5. **Bob Handoff Section** features:
-   - Ready-to-paste IBM Bob prompt
+   - Ready-to-paste IBM Bob prompt (language-aware instructions)
    - "Launch IBM Bob" button (opens IBM Bob application)
    - "Download IBM Bob" button (links to IBM Bob repository)
    - Clear explanation that IBM Bob is a VS Code fork
@@ -55,7 +63,7 @@ Comprehensive redesign with IBM branding, IBM watsonx.ai logo integration, dedic
    - Next steps guide
 6. Live endpoint URL prominently displayed with copy and open buttons.
 7. Manual scroll adjustment: Bob section visibility adjusts based on scroll position.
-8. "Recent endpoints (this session)" list shows previous generations with region badges.
+8. "Recent endpoints (this session)" list shows previous generations with language and region badges.
 
 ---
 
@@ -82,13 +90,13 @@ BobBridge/
 │   ├── theme-toggle.tsx              # Dark/light mode
 │   └── ui/                           # shadcn primitives
 ├── lib/
-│   ├── watsonx.ts                    # IAM token + textChat wrapper
-│   ├── prompt.ts                     # system prompt template
-│   ├── parse.ts                      # robust JSON extraction
-│   ├── store.ts                      # in-memory Map
-│   ├── bob-handoff.ts                # IBM Bob prompt generator
-│   ├── validation.ts                 # NEW: Input validation and guardrails
-│   ├── types.ts                      # shared types (with region/model)
+│   ├── watsonx.ts                    # IAM token + textChat wrapper (language-aware)
+│   ├── prompt.ts                     # language-specific system prompts
+│   ├── parse.ts                      # robust JSON extraction (backward compatible)
+│   ├── store.ts                      # in-memory Map (with language field)
+│   ├── bob-handoff.ts                # language-aware IBM Bob prompt generator
+│   ├── validation.ts                 # Input validation and guardrails
+│   ├── types.ts                      # shared types (with language/region/model)
 │   ├── env.ts                        # environment validation
 │   └── utils.ts                      # cn helper
 ├── scripts/

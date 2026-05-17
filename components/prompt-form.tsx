@@ -10,7 +10,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Zap, Loader2, Sparkles, ShieldAlert, Code2 } from 'lucide-react';
 import { validatePrompt } from '@/lib/validation';
-import type { GenerateResponse, SupportedLanguage, SUPPORTED_LANGUAGES } from '@/lib/types';
+import { SUPPORTED_LANGUAGES } from '@/lib/types';
+import type { GenerateResponse, SupportedLanguage } from '@/lib/types';
 
 interface Props {
   onResult: (r: GenerateResponse & { fromCache?: boolean }) => void;
