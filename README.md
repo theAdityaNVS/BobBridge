@@ -2,6 +2,8 @@
 
 > Development accelerated. Describe an endpoint, get a live mock URL and a Bob-ready code scaffold instantly — in your language of choice.
 
+**Dynamic Framework Display**: The hero section features an animated typing effect that cycles through all 9 supported frameworks, showcasing the multi-language capabilities.
+
 **Built by IBM Bob** for the lablab.ai IBM Bob hackathon (May 15–17, 2026).
 
 ## What it does
@@ -76,6 +78,7 @@ See `docs/superpowers/specs/2026-05-17-bobbridge-design.md`.
 
 ## UI Components
 
+- **TypingAnimation**: Dynamic typing animation cycling through all 9 supported frameworks with IBM gradient styling
 - **AITipsBanner**: Rotating educational tips with pause on hover
 - **BobHandoffSection**: Dedicated section for IBM Bob integration with 2-column layout
 - **ResultPanel**: Enhanced with region and model information
@@ -95,8 +98,9 @@ BobBridge/
 │       ├── generate/route.ts         # POST: prompt → result (with region info)
 │       └── mock/[id]/route.ts        # GET/POST/PUT/DELETE/OPTIONS
 ├── components/
-│   ├── ai-tips-banner.tsx            # NEW: Rotating tips banner
-│   ├── bob-handoff-section.tsx       # NEW: Dedicated Bob integration
+│   ├── typing-animation.tsx          # Dynamic framework typing animation
+│   ├── ai-tips-banner.tsx            # Rotating tips banner
+│   ├── bob-handoff-section.tsx       # Dedicated Bob integration
 │   ├── prompt-form.tsx               # Model selector
 │   ├── result-panel.tsx              # Enhanced with region display
 │   ├── code-block.tsx

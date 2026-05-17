@@ -81,9 +81,10 @@ BobBridge/
 │       ├── generate/route.ts         # POST: prompt → result (with region)
 │       └── mock/[id]/route.ts        # GET/POST/PUT/DELETE/OPTIONS
 ├── components/
+│   ├── typing-animation.tsx          # Dynamic framework typing animation
 │   ├── ai-tips-banner.tsx            # Rotating tips banner
 │   ├── bob-handoff-section.tsx       # Dedicated Bob integration with 2-column layout
-│   ├── ibm-logo.tsx                  # NEW: IBM watsonx.ai logo component
+│   ├── ibm-logo.tsx                  # IBM watsonx.ai logo component
 │   ├── prompt-form.tsx               # Model selector with validation
 │   ├── result-panel.tsx              # Enhanced with region display
 │   ├── code-block.tsx                # Syntax highlighting
@@ -326,14 +327,22 @@ To be detailed by the `writing-plans` skill after this spec is approved. High-le
 - **Components**: All UI elements updated with IBM styling
 
 ### New Components
-1. **AITipsBanner** (`components/ai-tips-banner.tsx`)
+1. **TypingAnimation** (`components/typing-animation.tsx`)
+   - Dynamic typing animation for framework names
+   - Cycles through all 9 supported frameworks
+   - Smooth typing and deleting effects
+   - IBM gradient styling for brand consistency
+   - Animated cursor with pulse effect
+   - 2-second pause between transitions
+
+2. **AITipsBanner** (`components/ai-tips-banner.tsx`)
    - 10 rotating educational tips
    - Auto-rotates every 6 seconds
    - Pauses on hover
    - Dismissible with close button
    - Progress indicators
 
-2. **BobHandoffSection** (`components/bob-handoff-section.tsx`)
+3. **BobHandoffSection** (`components/bob-handoff-section.tsx`)
    - Dedicated section for IBM Bob integration
    - 2-column layout with sticky positioning
    - Action buttons: "Launch IBM Bob" and "Download IBM Bob"
@@ -343,25 +352,26 @@ To be detailed by the `writing-plans` skill after this spec is approved. High-le
    - IBM gradient styling
    - Smooth animation on appearance
 
-3. **IBMWatsonxLogo** (`components/ibm-logo.tsx`)
+4. **IBMWatsonxLogo** (`components/ibm-logo.tsx`)
    - SVG-based IBM watsonx.ai logo
    - Scalable and theme-aware
    - Used in header and footer
 
-4. **Input Validation** (`lib/validation.ts`)
+5. **Input Validation** (`lib/validation.ts`)
    - Comprehensive guardrails for sensitive content
    - Blocks passwords, credentials, SQL queries
    - Real-time validation feedback
    - Clear error messages
 
 ### Enhanced Features
+- **Dynamic Framework Display**: Hero section features animated typing effect cycling through all 9 frameworks
 - **Region Display**: Shows watsonx.ai region (extracted from WATSONX_URL)
 - **Model Information**: Displays which AI model was used
 - **2-Column Layout**: Mock result and Bob handoff side-by-side on larger screens
 - **Smart Auto-scroll**: Automatically scrolls to results with delayed Bob section appearance
 - **Manual Scroll Adjustment**: Bob section visibility adjusts based on scroll position
 - **Professional Terminology**: "Generate Mock & Contract" instead of "Unblock Team"
-- **Enhanced Header**: IBM watsonx.ai logo and IBM Bob branding
+- **Enhanced Header**: IBM watsonx.ai logo and IBM Bob branding with dynamic framework animation
 - **Improved Footer**: IBM Bob attribution with logo
 - **Input Security**: Validation guardrails prevent sensitive content generation
 - **Fixed Emoji Display**: Robot emoji properly displayed without color issues
