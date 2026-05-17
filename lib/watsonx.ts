@@ -20,6 +20,7 @@ export interface GenerateOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   pathSlug?: string;
   stricter?: boolean; // used on retry after malformed output
+  modelId?: string; // allow model selection from UI
 }
 
 export async function generateContract(
@@ -27,8 +28,9 @@ export async function generateContract(
   options: GenerateOptions = {},
 ): Promise<string> {
   const svc = getClient();
+  const modelId = options.modelId || env.WATSONX_MODEL_ID;
   const response = await svc.textChat({
-    modelId: env.WATSONX_MODEL_ID,
+    modelId,
     projectId: env.WATSONX_PROJECT_ID,
     messages: [
       { role: 'system', content: SYSTEM_PROMPT },

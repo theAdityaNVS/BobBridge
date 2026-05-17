@@ -2,7 +2,7 @@
 
 > Frontend unblocked. Describe an endpoint, get a live mock URL and a Bob-ready Spring Boot scaffold.
 
-Built for the lablab.ai IBM Bob hackathon (May 15–17, 2026).
+**Built by IBM Bob** for the lablab.ai IBM Bob hackathon (May 15–17, 2026).
 
 ## What it does
 
@@ -123,6 +123,15 @@ Set environment variables in Vercel dashboard or CLI:
 - `WATSONX_PROJECT_ID`
 - `WATSONX_URL`
 - `WATSONX_MODEL_ID` (optional, defaults to `ibm/granite-3-3-8b-instruct`)
+
+## Credits
+
+**Built by IBM Bob** - An AI coding assistant that helped create this entire application, including:
+- Architecture and design
+- Full-stack implementation (Next.js, TypeScript, React)
+- UI/UX improvements and dark mode
+- Integration with IBM watsonx.ai
+- Documentation and testing
 
 ## License
 

@@ -13,6 +13,7 @@ interface GenerateRequest {
   prompt?: string;
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   pathSlug?: string;
+  modelId?: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -30,7 +31,11 @@ export async function POST(req: NextRequest) {
 
   let raw: string;
   try {
-    raw = await generateContract(prompt, { method: body.method, pathSlug: body.pathSlug });
+    raw = await generateContract(prompt, {
+      method: body.method,
+      pathSlug: body.pathSlug,
+      modelId: body.modelId,
+    });
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'watsonx call failed';
     return NextResponse.json({ error: msg }, { status: 502 });
@@ -45,6 +50,7 @@ export async function POST(req: NextRequest) {
         const retry = await generateContract(prompt, {
           method: body.method,
           pathSlug: body.pathSlug,
+          modelId: body.modelId,
           stricter: true,
         });
         contract = parseContract(retry);
