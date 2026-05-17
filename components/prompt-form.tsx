@@ -8,12 +8,12 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { Zap, Loader2, Sparkles, ShieldAlert } from 'lucide-react';
+import { Zap, Loader2, Sparkles, ShieldAlert, Gauge } from 'lucide-react';
 import { validatePrompt } from '@/lib/validation';
 import type { GenerateResponse } from '@/lib/types';
 
 interface Props {
-  onResult: (r: GenerateResponse) => void;
+  onResult: (r: GenerateResponse & { fromCache?: boolean }) => void;
   onError: (msg: string) => void;
   initialPrompt?: string;
   initialMethod?: 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -69,7 +69,8 @@ export function PromptForm({ onResult, onError, initialPrompt = '', initialMetho
         return;
       }
       const result = await res.json();
-      onResult(result);
+      const cacheStatus = res.headers.get('X-Cache');
+      onResult({ ...result, fromCache: cacheStatus === 'HIT' });
       setIsCollapsed(true); // Collapse after successful generation
     } catch (err) {
       onError(err instanceof Error ? err.message : 'Network error');
