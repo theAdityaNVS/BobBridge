@@ -8,6 +8,7 @@ import { AITipsChatbot } from '@/components/ai-tips-chatbot';
 import { PopularSearches } from '@/components/popular-searches';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { BobIcon } from '@/components/bob-icon';
+import { TypingAnimation } from '@/components/typing-animation';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Zap, Code2, Rocket, CheckCircle2 } from 'lucide-react';
@@ -83,7 +84,7 @@ export default function Home() {
             <ThemeToggle />
           </div>
           <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
-            Describe an endpoint. Get a live mock and a Bob-ready Spring Boot scaffold instantly.
+            Describe an endpoint. Get a live mock and a Bob-ready <TypingAnimation /> scaffold instantly.
           </p>
           <div className="flex flex-wrap gap-4 mt-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
