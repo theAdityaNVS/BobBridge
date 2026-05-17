@@ -7,10 +7,9 @@ import { BobHandoffSection } from '@/components/bob-handoff-section';
 import { AITipsChatbot } from '@/components/ai-tips-chatbot';
 import { PopularSearches } from '@/components/popular-searches';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { IBMWatsonxLogo } from '@/components/ibm-logo';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, Zap, Code2, Rocket } from 'lucide-react';
+import { Sparkles, Zap, Code2, Rocket, CheckCircle2 } from 'lucide-react';
 import type { GenerateResponse } from '@/lib/types';
 
 export default function Home() {
@@ -20,31 +19,24 @@ export default function Home() {
   const [method, setMethod] = useState<'GET' | 'POST' | 'PUT' | 'DELETE'>('GET');
   const mockResultRef = useRef<HTMLDivElement>(null);
   const bobHandoffRef = useRef<HTMLDivElement>(null);
-  const [showBobSection, setShowBobSection] = useState(false);
+  const leftColumnRef = useRef<HTMLDivElement>(null);
+  const [bobSectionOffset, setBobSectionOffset] = useState(0);
   const latest = results[0];
 
-  // Auto-scroll to mock result when generated, then show Bob section
-  useEffect(() => {
-    if (latest && mockResultRef.current) {
-      setTimeout(() => {
-        mockResultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // Show Bob section after scrolling to mock result
-        setTimeout(() => {
-          setShowBobSection(true);
-        }, 500);
-      }, 100);
-    }
-  }, [latest]);
-
-  // Handle manual scroll to show/hide Bob section based on scroll position
+  // Sync Bob section scroll with left column
   useEffect(() => {
     if (!latest) return;
 
     const handleScroll = () => {
-      if (mockResultRef.current) {
-        const rect = mockResultRef.current.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-        setShowBobSection(isVisible);
+      if (leftColumnRef.current && bobHandoffRef.current) {
+        const leftRect = leftColumnRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        
+        // Calculate how much of the left column has been scrolled
+        const scrollProgress = Math.max(0, -leftRect.top);
+        
+        // Apply the same offset to Bob section for synchronized scrolling
+        setBobSectionOffset(scrollProgress);
       }
     };
 
@@ -63,25 +55,27 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
-      {/* AI Tips Chatbot - Bottom Right */}
-      <AITipsChatbot />
+      {/* AI Tips Chatbot - Bottom Right with auto-popup */}
+      <AITipsChatbot autoPopup={true} />
 
       {/* Hero Section with IBM Branding */}
       <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg ibm-gradient">
+              <div className="p-2 rounded-lg ibm-gradient animate-pulse">
                 <Zap className="h-6 w-6 text-white" />
               </div>
               <div>
                 <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gradient-animate">
                   BobBridge
                 </h1>
-                <div className="flex items-center gap-2 mt-1.5">
+                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                   <p className="text-xs text-muted-foreground">Powered by</p>
-                  <IBMWatsonxLogo className="h-4 w-auto" />
-                  <span className="text-xs text-muted-foreground">& IBM Bob</span>
+                  <span className="text-sm font-bold ibm-text-gradient animate-in fade-in duration-1000">IBM watsonx.ai</span>
+                  <span className="text-xs text-muted-foreground">&</span>
+                  <span className="text-xs text-muted-foreground">Built using</span>
+                  <span className="text-sm font-bold ibm-text-gradient animate-in fade-in duration-1000" style={{ animationDelay: '200ms' }}>IBM Bob</span>
                 </div>
               </div>
             </div>
@@ -107,11 +101,11 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Main Content - 2 Column Layout */}
+      {/* Main Content - Dynamic Layout */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Column: Form and Popular Searches */}
-          <div className="space-y-6">
+        <div className={`grid gap-6 transition-all duration-500 ${latest ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
+          {/* Left Column: Form, Success Message, and Mock Result */}
+          <div ref={leftColumnRef} className={`space-y-6 ${!latest ? 'max-w-2xl mx-auto w-full' : ''}`}>
             <div className="bg-card border rounded-xl shadow-lg p-4 sm:p-6">
               <PromptForm
                 onResult={(r) => { setError(null); setResults((prev) => [r, ...prev]); }}
@@ -120,6 +114,28 @@ export default function Home() {
                 initialMethod={method}
               />
             </div>
+
+            {/* Success Message after generation */}
+            {latest && (
+              <div className="bg-primary/10 border-2 border-primary/30 rounded-xl p-4 animate-in fade-in slide-in-from-top-2 duration-500">
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
+                  <div>
+                    <p className="font-semibold text-foreground">Your mock is ready! 🎉</p>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      Check the details below and hand off to IBM Bob on the right
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Mock Result Panel */}
+            {latest && (
+              <div ref={mockResultRef} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <ResultPanel result={latest} />
+              </div>
+            )}
 
             {/* Popular Searches */}
             {!latest && (
@@ -136,23 +152,17 @@ export default function Home() {
             )}
           </div>
 
-          {/* Right Column: Results */}
+          {/* Right Column: Bob Handoff Section Only - Synced Scroll */}
           {latest && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              {/* Mock Result */}
-              <div ref={mockResultRef}>
-                <ResultPanel result={latest} />
-              </div>
-              
-              {/* Bob Handoff Section (appears after auto-scroll) */}
+            <div className="lg:sticky lg:top-6 lg:self-start">
               <div
                 ref={bobHandoffRef}
                 id="bob-handoff"
-                className={`transition-all duration-500 ${
-                  showBobSection
-                    ? 'opacity-100 translate-y-0'
-                    : 'opacity-0 translate-y-4 pointer-events-none'
-                }`}
+                className="animate-in fade-in slide-in-from-bottom-4 duration-500 transition-all"
+                style={{
+                  transform: `translateY(${Math.min(bobSectionOffset, 0)}px)`,
+                  transition: 'transform 0.1s ease-out'
+                }}
               >
                 <BobHandoffSection
                   bobHandoff={latest.bobHandoff}
@@ -196,14 +206,17 @@ export default function Home() {
       <footer className="border-t mt-16 py-6 text-center text-sm text-muted-foreground">
         <div className="space-y-3">
           <div className="flex items-center justify-center gap-2">
-            <p className="font-medium">Built with IBM Bob</p>
+            <p className="font-medium">Built using</p>
+            <span className="font-bold ibm-text-gradient">IBM Bob</span>
             <span className="text-lg" role="img" aria-label="robot" style={{ filter: 'none' }}>🤖</span>
           </div>
           <div className="flex items-center justify-center gap-2">
             <span>Powered by</span>
-            <IBMWatsonxLogo className="h-4 w-auto" />
+            <span className="text-sm font-bold ibm-text-gradient">IBM watsonx.ai</span>
           </div>
-          <p className="text-xs">IBM Bob is a VS Code fork with AI capabilities • Accelerating Development with AI</p>
+          <p className="text-xs">
+            <span className="ibm-text-gradient font-semibold">IBM Bob</span> is a VS Code fork with AI capabilities • Accelerating Development with AI
+          </p>
         </div>
       </footer>
     </main>

@@ -18,11 +18,55 @@ const AI_TIPS = [
   "💼 Generated contracts follow REST API best practices",
 ];
 
-export function AITipsChatbot() {
+interface AITipsChatbotProps {
+  autoPopup?: boolean;
+}
+
+export function AITipsChatbot({ autoPopup = false }: AITipsChatbotProps) {
   const [currentTip, setCurrentTip] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [hasAutoOpened, setHasAutoOpened] = useState(false);
 
+  // Auto-popup after idle time
+  useEffect(() => {
+    if (!autoPopup || hasAutoOpened) return;
+
+    let idleTimer: NodeJS.Timeout;
+    let activityTimer: NodeJS.Timeout;
+
+    const resetIdleTimer = () => {
+      clearTimeout(idleTimer);
+      clearTimeout(activityTimer);
+      
+      // Wait 3 seconds of inactivity before showing tips
+      activityTimer = setTimeout(() => {
+        if (!isOpen && !hasAutoOpened) {
+          setIsOpen(true);
+          setHasAutoOpened(true);
+        }
+      }, 3000);
+    };
+
+    // Track user activity
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+    events.forEach(event => {
+      document.addEventListener(event, resetIdleTimer);
+    });
+
+    // Initial timer
+    resetIdleTimer();
+
+    return () => {
+      clearTimeout(idleTimer);
+      clearTimeout(activityTimer);
+      events.forEach(event => {
+        document.removeEventListener(event, resetIdleTimer);
+      });
+    };
+  }, [autoPopup, hasAutoOpened, isOpen]);
+
+  // Rotate tips when open
   useEffect(() => {
     if (!isOpen) return;
 

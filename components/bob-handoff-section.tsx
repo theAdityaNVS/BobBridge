@@ -41,7 +41,7 @@ export function BobHandoffSection({ bobHandoff, mockUrl }: Props) {
           <div className="space-y-2 flex-1">
             <div className="flex items-center gap-3">
               <CardTitle className="text-2xl flex items-center gap-2">
-                <span className="ibm-text-gradient">Ready for IBM Bob</span>
+                <span className="ibm-text-gradient">Ready for IBM Bob Section</span>
                 <span className="text-2xl filter-none" role="img" aria-label="robot" style={{ filter: 'none' }}>🤖</span>
               </CardTitle>
               <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">

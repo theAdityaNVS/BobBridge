@@ -36,6 +36,7 @@ export function PromptForm({ onResult, onError, initialPrompt = '', initialMetho
   const [modelId, setModelId] = useState<string>(MODELS[0].id);
   const [loading, setLoading] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Update prompt and method when props change
   useEffect(() => {
@@ -67,7 +68,9 @@ export function PromptForm({ onResult, onError, initialPrompt = '', initialMetho
         onError(body.error ?? `HTTP ${res.status}`);
         return;
       }
-      onResult(await res.json());
+      const result = await res.json();
+      onResult(result);
+      setIsCollapsed(true); // Collapse after successful generation
     } catch (err) {
       onError(err instanceof Error ? err.message : 'Network error');
     } finally {
@@ -80,29 +83,45 @@ export function PromptForm({ onResult, onError, initialPrompt = '', initialMetho
   return (
     <form onSubmit={submit} className="space-y-5">
       <div className="space-y-2">
-        <Label htmlFor="prompt" className="text-lg font-bold text-gradient-animate">
-          Describe Your Endpoint
-        </Label>
-        <Textarea
-          id="prompt"
-          rows={5}
-          value={prompt}
-          onChange={(e) => {
-            setPrompt(e.target.value);
-            setValidationError(null);
-          }}
-          placeholder="e.g., Fetch user order history with item name, price, and status"
-          className="mt-2 resize-none focus-visible:ring-2 focus-visible:ring-primary transition-all"
-        />
-        {validationError && (
-          <Alert variant="destructive" className="mt-2">
-            <ShieldAlert className="h-4 w-4" />
-            <AlertDescription>{validationError}</AlertDescription>
-          </Alert>
+        <button
+          type="button"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="w-full flex items-center justify-between text-left"
+        >
+          <Label htmlFor="prompt" className="text-lg font-bold text-gradient-animate cursor-pointer">
+            Describe Your Endpoint
+          </Label>
+          {isCollapsed && (
+            <Badge variant="secondary" className="text-xs">
+              Click to expand
+            </Badge>
+          )}
+        </button>
+        {!isCollapsed && (
+          <>
+            <Textarea
+              id="prompt"
+              rows={5}
+              value={prompt}
+              onChange={(e) => {
+                setPrompt(e.target.value);
+                setValidationError(null);
+              }}
+              placeholder="e.g., Fetch user order history with item name, price, and status"
+              className="mt-2 resize-none focus-visible:ring-2 focus-visible:ring-primary transition-all"
+            />
+            {validationError && (
+              <Alert variant="destructive" className="mt-2">
+                <ShieldAlert className="h-4 w-4" />
+                <AlertDescription>{validationError}</AlertDescription>
+              </Alert>
+            )}
+          </>
         )}
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {!isCollapsed && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="space-y-2">
           <Label htmlFor="method" className="text-sm font-medium">HTTP Method</Label>
           <Select value={method} onValueChange={(v) => setMethod(v as typeof method)}>
@@ -130,13 +149,13 @@ export function PromptForm({ onResult, onError, initialPrompt = '', initialMetho
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="model" className="text-sm font-medium flex items-center gap-2">
+          <Label htmlFor="model" className="text-sm font-medium flex items-center gap-2 flex-wrap">
             <Sparkles className="h-3.5 w-3.5 text-primary" />
             AI Model
-            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-xs">
-              Powered by IBM Watson
-            </Badge>
           </Label>
+          <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[10px] w-fit">
+            Powered by IBM Watson
+          </Badge>
           <Select value={modelId} onValueChange={setModelId}>
             <SelectTrigger id="model" className="mt-2">
               <SelectValue />
@@ -150,9 +169,10 @@ export function PromptForm({ onResult, onError, initialPrompt = '', initialMetho
             </SelectContent>
           </Select>
         </div>
-      </div>
+        </div>
+      )}
 
-      {selectedModel && (
+      {!isCollapsed && selectedModel && (
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <span>Using <span className="font-medium text-foreground">{selectedModel.label}</span> — {selectedModel.description}</span>
           <Badge variant="outline" className="text-xs">
@@ -161,7 +181,8 @@ export function PromptForm({ onResult, onError, initialPrompt = '', initialMetho
         </div>
       )}
 
-      <Button
+      {!isCollapsed && (
+        <Button
         type="submit"
         disabled={loading || !prompt.trim()}
         size="lg"
@@ -178,7 +199,8 @@ export function PromptForm({ onResult, onError, initialPrompt = '', initialMetho
             Generate Mock & Contract
           </>
         )}
-      </Button>
+        </Button>
+      )}
     </form>
   );
 }
