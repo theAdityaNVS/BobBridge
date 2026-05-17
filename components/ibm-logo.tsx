@@ -1,4 +1,4 @@
-// components/ibm-logo.tsx — IBM watsonx.ai logo component
+// components/ibm-logo.tsx — IBM official 8-bar striped logo
 
 interface IBMLogoProps {
   className?: string;
@@ -46,31 +46,64 @@ export function IBMWatsonxLogo({ className = "h-8 w-auto" }: IBMLogoProps) {
   );
 }
 
-export function IBMLogo({ className = "h-6 w-auto" }: IBMLogoProps) {
+export function IBMLogo({ className = "h-8 w-auto" }: IBMLogoProps) {
   return (
     <svg
-      viewBox="0 0 100 40"
+      viewBox="0 0 1000 400"
       className={className}
       xmlns="http://www.w3.org/2000/svg"
       aria-label="IBM"
+      fill="currentColor"
     >
-      <g fill="currentColor">
-        {/* IBM 8-bar logo simplified */}
-        <rect x="5" y="8" width="3" height="24" />
-        <rect x="10" y="8" width="3" height="24" />
-        <rect x="15" y="8" width="3" height="24" />
+      {/* IBM 8-bar striped logo - Official design */}
+      <g>
+        {/* Top stripe */}
+        <rect x="0" y="0" width="155" height="40" />
+        <rect x="177" y="0" width="246" height="40" />
+        <rect x="444" y="0" width="133" height="40" />
+        <rect x="666" y="0" width="134" height="40" />
         
-        <rect x="25" y="8" width="3" height="24" />
-        <rect x="30" y="8" width="3" height="10" />
-        <rect x="30" y="22" width="3" height="10" />
-        <rect x="35" y="8" width="3" height="24" />
+        {/* Second stripe */}
+        <rect x="0" y="50" width="155" height="40" />
+        <rect x="177" y="50" width="246" height="40" />
+        <rect x="444" y="50" width="133" height="40" />
+        <rect x="651" y="50" width="149" height="40" />
         
-        <rect x="45" y="8" width="3" height="24" />
-        <rect x="50" y="8" width="3" height="24" />
-        <rect x="55" y="8" width="3" height="10" />
-        <rect x="55" y="22" width="3" height="10" />
-        <rect x="60" y="8" width="3" height="24" />
-        <rect x="65" y="8" width="3" height="24" />
+        {/* Third stripe - with I gaps */}
+        <rect x="44" y="100" width="67" height="40" />
+        <rect x="222" y="100" width="67" height="40" />
+        <rect x="351" y="100" width="72" height="40" />
+        <rect x="489" y="100" width="88" height="40" />
+        <rect x="636" y="100" width="75" height="40" />
+        
+        {/* Fourth stripe - with I gaps */}
+        <rect x="44" y="150" width="67" height="40" />
+        <rect x="222" y="150" width="190" height="40" />
+        <rect x="489" y="150" width="222" height="40" />
+        
+        {/* Fifth stripe - with I gaps */}
+        <rect x="44" y="200" width="67" height="40" />
+        <rect x="222" y="200" width="190" height="40" />
+        <rect x="489" y="200" width="222" height="40" />
+        
+        {/* Sixth stripe - with I gaps */}
+        <rect x="44" y="250" width="67" height="40" />
+        <rect x="222" y="250" width="67" height="40" />
+        <rect x="351" y="250" width="72" height="40" />
+        <rect x="489" y="250" width="88" height="40" />
+        <rect x="636" y="250" width="75" height="40" />
+        
+        {/* Seventh stripe */}
+        <rect x="0" y="300" width="155" height="40" />
+        <rect x="177" y="300" width="246" height="40" />
+        <rect x="444" y="300" width="133" height="40" />
+        <rect x="651" y="300" width="149" height="40" />
+        
+        {/* Bottom stripe */}
+        <rect x="0" y="350" width="155" height="40" />
+        <rect x="177" y="350" width="246" height="40" />
+        <rect x="444" y="350" width="133" height="40" />
+        <rect x="666" y="350" width="134" height="40" />
       </g>
     </svg>
   );
