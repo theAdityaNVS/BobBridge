@@ -3,7 +3,7 @@ import { jsonrepair } from 'jsonrepair';
 
 export interface Contract {
   mock_response: unknown;
-  java_boilerplate: string;
+  code_boilerplate: string;
   suggested_path: string;
   http_method: 'GET' | 'POST' | 'PUT' | 'DELETE';
 }
@@ -51,8 +51,10 @@ export function parseContract(raw: string): Contract {
   if (!VERBS.has(method)) {
     throw new MalformedContractError(`Invalid http_method: ${obj.http_method}`, raw);
   }
-  if (typeof obj.java_boilerplate !== 'string' || obj.java_boilerplate.length === 0) {
-    throw new MalformedContractError('Missing or empty java_boilerplate', raw);
+  // Support both old java_boilerplate and new code_boilerplate for backward compatibility
+  const codeBoilerplate = obj.code_boilerplate || obj.java_boilerplate;
+  if (typeof codeBoilerplate !== 'string' || codeBoilerplate.length === 0) {
+    throw new MalformedContractError('Missing or empty code_boilerplate', raw);
   }
   if (typeof obj.suggested_path !== 'string') {
     throw new MalformedContractError('Missing suggested_path', raw);
@@ -63,7 +65,7 @@ export function parseContract(raw: string): Contract {
 
   return {
     mock_response: obj.mock_response,
-    java_boilerplate: obj.java_boilerplate,
+    code_boilerplate: codeBoilerplate as string,
     suggested_path: obj.suggested_path,
     http_method: method as Contract['http_method'],
   };

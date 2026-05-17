@@ -2,7 +2,8 @@
 import { WatsonXAI } from '@ibm-cloud/watsonx-ai';
 import { IamAuthenticator } from 'ibm-cloud-sdk-core';
 import { env } from './env';
-import { SYSTEM_PROMPT, buildUserMessage } from './prompt';
+import { buildSystemPrompt, buildUserMessage } from './prompt';
+import type { SupportedLanguage } from './types';
 
 let client: WatsonXAI | null = null;
 
@@ -21,6 +22,7 @@ export interface GenerateOptions {
   pathSlug?: string;
   stricter?: boolean; // used on retry after malformed output
   modelId?: string; // allow model selection from UI
+  language?: SupportedLanguage; // target programming language
 }
 
 export async function generateContract(
@@ -29,11 +31,12 @@ export async function generateContract(
 ): Promise<string> {
   const svc = getClient();
   const modelId = options.modelId || env.WATSONX_MODEL_ID;
+  const language = options.language || 'java';
   const response = await svc.textChat({
     modelId,
     projectId: env.WATSONX_PROJECT_ID,
     messages: [
-      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'system', content: buildSystemPrompt(language) },
       { role: 'user', content: buildUserMessage(userPrompt, options) },
     ],
     temperature: 0,

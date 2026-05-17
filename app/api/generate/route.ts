@@ -7,6 +7,7 @@ import { mockStore } from '@/lib/store';
 import { buildBobPrompt } from '@/lib/bob-handoff';
 import { env } from '@/lib/env';
 import { responseCache } from '@/lib/cache';
+import type { SupportedLanguage } from '@/lib/types';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -16,6 +17,7 @@ interface GenerateRequest {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   pathSlug?: string;
   modelId?: string;
+  language?: SupportedLanguage;
 }
 
 export async function POST(req: NextRequest) {
@@ -33,6 +35,7 @@ export async function POST(req: NextRequest) {
 
   // Check cache first
   const method = body.method || 'GET';
+  const language = body.language || 'java';
   const cachedResponse = responseCache.get(prompt, method);
   if (cachedResponse) {
     // Return cached response with a header indicating it's from cache
@@ -50,6 +53,7 @@ export async function POST(req: NextRequest) {
       method: body.method,
       pathSlug: body.pathSlug,
       modelId: body.modelId,
+      language,
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'watsonx call failed';
@@ -66,6 +70,7 @@ export async function POST(req: NextRequest) {
           method: body.method,
           pathSlug: body.pathSlug,
           modelId: body.modelId,
+          language,
           stricter: true,
         });
         contract = parseContract(retry);
@@ -88,7 +93,8 @@ export async function POST(req: NextRequest) {
     payload: contract.mock_response,
     method: (body.method ?? contract.http_method) as 'GET' | 'POST' | 'PUT' | 'DELETE',
     path,
-    javaCode: contract.java_boilerplate,
+    code: contract.code_boilerplate,
+    language,
     prompt,
     createdAt: Date.now(),
   };
@@ -104,10 +110,11 @@ export async function POST(req: NextRequest) {
     id,
     mockUrl: `${origin}/api/mock/${id}`,
     mockResponse: contract.mock_response,
-    javaBoilerplate: contract.java_boilerplate,
+    codeBoilerplate: contract.code_boilerplate,
     bobHandoff: buildBobPrompt(entry),
     method: entry.method,
     path,
+    language,
     region,
     modelUsed: body.modelId || env.WATSONX_MODEL_ID,
   };

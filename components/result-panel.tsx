@@ -3,10 +3,11 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Copy, CheckCircle2, ExternalLink, Globe } from 'lucide-react';
+import { Copy, CheckCircle2, ExternalLink, Globe, Code2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CodeBlock } from './code-block';
+import { SUPPORTED_LANGUAGES } from '@/lib/types';
 import type { GenerateResponse } from '@/lib/types';
 
 interface Props {
@@ -14,6 +15,20 @@ interface Props {
 }
 
 export function ResultPanel({ result }: Props) {
+  const languageConfig = SUPPORTED_LANGUAGES.find(l => l.id === result.language);
+  const languageLabel = languageConfig?.label || 'Code';
+  const languageEmoji = {
+    java: '☕',
+    python: '🐍',
+    javascript: '📜',
+    typescript: '📘',
+    go: '🐹',
+    rust: '🦀',
+    csharp: '#️⃣',
+    php: '🐘',
+    ruby: '💎',
+  }[result.language] || '💻';
+
   function copy(text: string, label: string) {
     navigator.clipboard.writeText(text);
     toast.success(`${label} copied`, {
@@ -31,9 +46,13 @@ export function ResultPanel({ result }: Props) {
               Test your frontend immediately with this live endpoint
             </CardDescription>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Badge variant="secondary" className="text-base px-3 py-1">
               {result.method}
+            </Badge>
+            <Badge variant="outline" className="text-sm px-2 py-1 gap-1">
+              <Code2 className="h-3 w-3" />
+              {languageLabel}
             </Badge>
             {result.region && (
               <Badge variant="outline" className="text-sm px-2 py-1 gap-1">
@@ -89,8 +108,8 @@ export function ResultPanel({ result }: Props) {
             <TabsTrigger value="json" className="text-sm">
               📋 JSON Preview
             </TabsTrigger>
-            <TabsTrigger value="java" className="text-sm">
-              ☕ Java Code
+            <TabsTrigger value="code" className="text-sm">
+              {languageEmoji} {languageLabel} Code
             </TabsTrigger>
           </TabsList>
           
@@ -111,21 +130,21 @@ export function ResultPanel({ result }: Props) {
             <CodeBlock code={JSON.stringify(result.mockResponse, null, 2)} lang="json" />
           </TabsContent>
           
-          <TabsContent value="java" className="space-y-3 mt-4">
+          <TabsContent value="code" className="space-y-3 mt-4">
             <div className="flex items-center justify-between">
               <p className="text-sm text-muted-foreground">
-                Spring Boot controller boilerplate
+                {languageConfig?.framework || 'Framework'} endpoint boilerplate
               </p>
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => copy(result.javaBoilerplate, 'Java code')}
+                onClick={() => copy(result.codeBoilerplate, `${languageLabel} code`)}
               >
                 <Copy className="h-3.5 w-3.5 mr-2" />
-                Copy Java
+                Copy {languageLabel}
               </Button>
             </div>
-            <CodeBlock code={result.javaBoilerplate} lang="java" />
+            <CodeBlock code={result.codeBoilerplate} lang={result.language} />
           </TabsContent>
         </Tabs>
       </CardContent>

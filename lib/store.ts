@@ -1,10 +1,13 @@
 // lib/store.ts — module-level Map of mockId → entry. Per-instance, ephemeral.
+import type { SupportedLanguage } from './types';
+
 export interface MockEntry {
   id: string;
   payload: unknown;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   path: string;
-  javaCode: string;
+  code: string;
+  language: SupportedLanguage;
   prompt: string;
   createdAt: number;
 }

@@ -1,15 +1,32 @@
 'use client';
 
 import { Highlight, themes } from 'prism-react-renderer';
+import type { SupportedLanguage } from '@/lib/types';
 
 interface Props {
   code: string;
-  lang: 'java' | 'json';
+  lang: SupportedLanguage | 'json';
 }
 
+// Map our language IDs to Prism language identifiers
+const PRISM_LANG_MAP: Record<SupportedLanguage | 'json', string> = {
+  java: 'java',
+  python: 'python',
+  javascript: 'javascript',
+  typescript: 'typescript',
+  go: 'go',
+  rust: 'rust',
+  csharp: 'csharp',
+  php: 'php',
+  ruby: 'ruby',
+  json: 'json',
+};
+
 export function CodeBlock({ code, lang }: Props) {
+  const prismLang = PRISM_LANG_MAP[lang] || 'javascript';
+  
   return (
-    <Highlight code={code} language={lang} theme={themes.vsDark}>
+    <Highlight code={code} language={prismLang as any} theme={themes.vsDark}>
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <pre
           className={`${className} p-4 rounded-md overflow-auto text-sm`}

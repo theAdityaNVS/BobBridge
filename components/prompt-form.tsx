@@ -8,9 +8,9 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { Zap, Loader2, Sparkles, ShieldAlert, Gauge } from 'lucide-react';
+import { Zap, Loader2, Sparkles, ShieldAlert, Code2 } from 'lucide-react';
 import { validatePrompt } from '@/lib/validation';
-import type { GenerateResponse } from '@/lib/types';
+import type { GenerateResponse, SupportedLanguage, SUPPORTED_LANGUAGES } from '@/lib/types';
 
 interface Props {
   onResult: (r: GenerateResponse & { fromCache?: boolean }) => void;
@@ -34,6 +34,7 @@ export function PromptForm({ onResult, onError, initialPrompt = '', initialMetho
   const [method, setMethod] = useState<'GET' | 'POST' | 'PUT' | 'DELETE'>(initialMethod);
   const [pathSlug, setPathSlug] = useState('');
   const [modelId, setModelId] = useState<string>(MODELS[0].id);
+  const [language, setLanguage] = useState<SupportedLanguage>('java');
   const [loading, setLoading] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -61,7 +62,7 @@ export function PromptForm({ onResult, onError, initialPrompt = '', initialMetho
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, method, pathSlug: pathSlug || undefined, modelId }),
+        body: JSON.stringify({ prompt, method, pathSlug: pathSlug || undefined, modelId, language }),
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
@@ -80,6 +81,7 @@ export function PromptForm({ onResult, onError, initialPrompt = '', initialMetho
   }
 
   const selectedModel = MODELS.find(m => m.id === modelId);
+  const selectedLanguage = SUPPORTED_LANGUAGES.find(l => l.id === language);
 
   return (
     <form onSubmit={submit} className="space-y-5">
@@ -122,7 +124,25 @@ export function PromptForm({ onResult, onError, initialPrompt = '', initialMetho
       </div>
       
       {!isCollapsed && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="language" className="text-sm font-medium flex items-center gap-2">
+            <Code2 className="h-3.5 w-3.5 text-primary" />
+            Language
+          </Label>
+          <Select value={language} onValueChange={(v) => setLanguage(v as SupportedLanguage)}>
+            <SelectTrigger id="language" className="mt-2">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {SUPPORTED_LANGUAGES.map((lang) => (
+                <SelectItem key={lang.id} value={lang.id}>
+                  {lang.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <div className="space-y-2">
           <Label htmlFor="method" className="text-sm font-medium">HTTP Method</Label>
           <Select value={method} onValueChange={(v) => setMethod(v as typeof method)}>
@@ -173,9 +193,15 @@ export function PromptForm({ onResult, onError, initialPrompt = '', initialMetho
         </div>
       )}
 
-      {!isCollapsed && selectedModel && (
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span>Using <span className="font-medium text-foreground">{selectedModel.label}</span> — {selectedModel.description}</span>
+      {!isCollapsed && selectedModel && selectedLanguage && (
+        <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+          <span>
+            <span className="font-medium text-foreground">{selectedLanguage.label}</span> ({selectedLanguage.framework})
+          </span>
+          <span>•</span>
+          <span>
+            <span className="font-medium text-foreground">{selectedModel.label}</span> — {selectedModel.description}
+          </span>
           <Badge variant="outline" className="text-xs">
             watsonx.ai
           </Badge>
