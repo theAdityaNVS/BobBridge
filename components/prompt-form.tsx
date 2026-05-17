@@ -28,7 +28,7 @@ export function PromptForm({ onResult, onError }: Props) {
   const [prompt, setPrompt] = useState('');
   const [method, setMethod] = useState<'GET' | 'POST' | 'PUT' | 'DELETE'>('GET');
   const [pathSlug, setPathSlug] = useState('');
-  const [modelId, setModelId] = useState(MODELS[0].id);
+  const [modelId, setModelId] = useState<string>(MODELS[0].id);
   const [loading, setLoading] = useState(false);
 
   async function submit(e: React.FormEvent) {
@@ -109,10 +109,7 @@ export function PromptForm({ onResult, onError }: Props) {
             <SelectContent>
               {MODELS.map((model) => (
                 <SelectItem key={model.id} value={model.id}>
-                  <div className="flex flex-col">
-                    <span className="font-medium">{model.label}</span>
-                    <span className="text-xs text-muted-foreground">{model.description}</span>
-                  </div>
+                  {model.label}
                 </SelectItem>
               ))}
             </SelectContent>
