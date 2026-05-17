@@ -6,6 +6,7 @@ import { parseContract, MalformedContractError } from '@/lib/parse';
 import { mockStore } from '@/lib/store';
 import { buildBobPrompt } from '@/lib/bob-handoff';
 import { env } from '@/lib/env';
+import { responseCache } from '@/lib/cache';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -28,6 +29,19 @@ export async function POST(req: NextRequest) {
   const prompt = body.prompt?.trim();
   if (!prompt) {
     return NextResponse.json({ error: 'prompt is required' }, { status: 400 });
+  }
+
+  // Check cache first
+  const method = body.method || 'GET';
+  const cachedResponse = responseCache.get(prompt, method);
+  if (cachedResponse) {
+    // Return cached response with a header indicating it's from cache
+    return NextResponse.json(cachedResponse, {
+      headers: {
+        'X-Cache': 'HIT',
+        'X-Cache-Age': String(Date.now() - parseInt(cachedResponse.id, 36)),
+      },
+    });
   }
 
   let raw: string;
@@ -86,7 +100,7 @@ export async function POST(req: NextRequest) {
   const regionMatch = env.WATSONX_URL.match(/https:\/\/([^.]+)\./);
   const region = regionMatch ? regionMatch[1] : 'unknown';
   
-  return NextResponse.json({
+  const response = {
     id,
     mockUrl: `${origin}/api/mock/${id}`,
     mockResponse: contract.mock_response,
@@ -96,6 +110,15 @@ export async function POST(req: NextRequest) {
     path,
     region,
     modelUsed: body.modelId || env.WATSONX_MODEL_ID,
+  };
+
+  // Cache the response
+  responseCache.set(prompt, method, response);
+
+  return NextResponse.json(response, {
+    headers: {
+      'X-Cache': 'MISS',
+    },
   });
 }
 
