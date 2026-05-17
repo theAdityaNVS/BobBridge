@@ -1,0 +1,41 @@
+{
+  "name": "bobbridge",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@ibm-cloud/watsonx-ai": "^1.7.12",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "@types/node": "^25.8.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.5.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.6",
+    "ibm-cloud-sdk-core": "^5.4.19",
+    "jsonrepair": "^3.14.0",
+    "lucide-react": "^1.16.0",
+    "nanoid": "^5.1.11",
+    "next": "^16.2.6",
+    "next-themes": "^0.4.6",
+    "postcss": "^8.5.14",
+    "prism-react-renderer": "^2.4.1",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.3.0",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^6.0.3"
+  }
+}
