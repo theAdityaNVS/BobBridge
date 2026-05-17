@@ -19,10 +19,6 @@
 # misc
 .DS_Store
 *.pem
-/.claude
-CLAUDE.md
-.claude*
-*.claude
 
 # debug
 npm-debug.log*
@@ -35,10 +31,6 @@ yarn-error.log*
 
 # vercel
 .vercel
-
-# gemini
-GEMINI.md
-.gemini/
 
 # typescript
 *.tsbuildinfo
