@@ -32,8 +32,8 @@ export function AITipsChatbot({ autoPopup = false }: AITipsChatbotProps) {
   useEffect(() => {
     if (!autoPopup || hasAutoOpened) return;
 
-    let idleTimer: NodeJS.Timeout;
-    let activityTimer: NodeJS.Timeout;
+    let idleTimer: NodeJS.Timeout | undefined = undefined;
+    let activityTimer: NodeJS.Timeout | undefined = undefined;
 
     const resetIdleTimer = () => {
       clearTimeout(idleTimer);
