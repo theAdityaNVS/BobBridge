@@ -1207,3 +1207,154 @@ git push origin v1.0-hackathon
 **Type consistency:** `MockEntry` shape used identically in `store.ts`, `bob-handoff.ts`, `app/api/generate/route.ts`. `GenerateResponse` shape matches between `app/api/generate/route.ts` response and `lib/types.ts`. `Contract` interface used only in `parse.ts` and consumed via destructuring. `GenerateOptions` defined in `watsonx.ts`, accepted shape mirrored inline in `prompt.ts` (independent type to avoid a circular import). ✓
 
 ---
+
+---
+
+## Task 17: Comprehensive UI Redesign with IBM Branding (2026-05-17)
+
+**Status:** ✅ Completed
+
+**Objective:** Implement comprehensive UI redesign with IBM branding, enhanced UX features, and improved IBM Bob integration.
+
+### Subtasks
+
+#### 17.1: IBM Branding Implementation
+- ✅ Add IBM Blue color palette to `app/globals.css`
+  - Official IBM Blue (#0f62fe) with full scale (10-100)
+  - Dark mode optimized colors
+  - Custom gradient utilities (`.ibm-gradient`, `.ibm-text-gradient`)
+- ✅ Update all components with IBM styling
+- ✅ Add IBM watsonx.ai and IBM Bob branding to header
+- ✅ Enhance footer with IBM attribution
+
+#### 17.2: New Component - AI Tips Banner
+- ✅ Create `components/ai-tips-banner.tsx`
+  - 10 rotating educational tips
+  - Auto-rotate every 6 seconds
+  - Pause on hover functionality
+  - Dismissible with close button
+  - Progress indicators (dots)
+  - Smooth animations
+
+#### 17.3: New Component - Bob Handoff Section
+- ✅ Create `components/bob-handoff-section.tsx`
+  - Dedicated section for IBM Bob integration
+  - Prominent card with IBM gradient border
+  - "Ready for IBM Bob 🤖" heading with badge
+  - Bob implementation prompt display
+  - "Open IBM Bob" button (VS Code protocol handler ready)
+  - "Install IBM Bob" button (links to marketplace)
+  - Next steps guide with bullet points
+  - Mock URL reference
+
+#### 17.4: Geographic Region Display
+- ✅ Update `lib/types.ts` to include `region` and `modelUsed` fields
+- ✅ Modify `app/api/generate/route.ts` to extract region from WATSONX_URL
+- ✅ Add region badge to result panel header
+- ✅ Display region info with globe icon
+- ✅ Show region in recent endpoints list
+
+#### 17.5: Enhanced User Experience
+- ✅ Replace "Unblock Team" with "Generate Mock & Contract"
+- ✅ Update button styling with IBM gradient
+- ✅ Implement auto-scroll to results after generation
+- ✅ Add model information display
+- ✅ Enhance header with IBM branding
+- ✅ Improve footer with IBM Bob attribution
+
+#### 17.6: Component Updates
+- ✅ Update `app/page.tsx`:
+  - Integrate AI tips banner
+  - Add auto-scroll functionality with refs
+  - Include dedicated Bob handoff section
+  - Enhanced header with IBM branding
+  - Updated footer
+  - Region display in recent endpoints
+- ✅ Update `components/result-panel.tsx`:
+  - Add region and model display
+  - Globe icon for region badge
+  - Info section with region/model details
+  - Remove Bob tab (moved to dedicated section)
+  - Two-tab layout (JSON Preview, Java Code)
+- ✅ Update `components/prompt-form.tsx`:
+  - IBM gradient button styling
+  - Updated button text
+  - Better loading message
+
+#### 17.7: Testing & Build
+- ✅ Run `npm run build` to verify TypeScript compilation
+- ✅ Verify all components render correctly
+- ✅ Test auto-scroll functionality
+- ✅ Test tips banner rotation and pause
+- ✅ Verify IBM branding consistency
+
+#### 17.8: Documentation Updates
+- ✅ Update `README.md`:
+  - Add Key Features section
+  - Document UI redesign features
+  - Update project structure
+  - Enhance credits section
+- ✅ Rewrite `UI_IMPROVEMENTS.md`:
+  - Comprehensive documentation of all changes
+  - Implementation details
+  - Design decisions
+  - Future enhancements
+- ✅ Update `docs/superpowers/specs/2026-05-17-bobbridge-design.md`:
+  - Add UI Enhancement section
+  - Update user flow
+  - Update file layout
+  - Add UI Redesign Implementation section
+- ✅ Update this plan document with Task 17
+
+#### 17.9: Git Commit
+- ✅ Stage all changes with `git add -A`
+- ✅ Commit with descriptive message documenting all changes
+
+### Files Created
+1. `components/ai-tips-banner.tsx` (75 lines)
+2. `components/bob-handoff-section.tsx` (125 lines)
+
+### Files Modified
+1. `app/globals.css` - IBM Blue color palette and gradients
+2. `app/page.tsx` - Enhanced layout with new components
+3. `components/prompt-form.tsx` - Updated button styling
+4. `components/result-panel.tsx` - Region/model display
+5. `lib/types.ts` - Added region and modelUsed fields
+6. `app/api/generate/route.ts` - Region extraction and response
+7. `README.md` - Updated documentation
+8. `UI_IMPROVEMENTS.md` - Comprehensive rewrite
+9. `docs/superpowers/specs/2026-05-17-bobbridge-design.md` - Updated spec
+10. `docs/superpowers/plans/2026-05-17-bobbridge.md` - This update
+
+### Success Criteria Met
+- ✅ IBM branding integrated throughout application
+- ✅ Geographic region displayed prominently
+- ✅ Dedicated Bob handoff section created
+- ✅ "Unblock team" terminology replaced
+- ✅ Rotating AI tips banner implemented
+- ✅ Auto-scroll functionality working
+- ✅ "Open IBM Bob" and "Install IBM Bob" buttons added
+- ✅ All components updated with IBM branding
+- ✅ Build successful (TypeScript compilation passed)
+- ✅ Git commit completed
+- ✅ All documentation updated
+
+### Key Achievements
+1. **Professional Enterprise UI**: IBM branding elevates application to enterprise standards
+2. **Enhanced User Guidance**: Tips banner and next steps guide improve UX
+3. **Seamless IBM Bob Integration**: Dedicated section makes handoff clear and easy
+4. **Transparency**: Region and model information builds trust
+5. **Accessibility**: ARIA labels, focus states, keyboard navigation
+6. **Performance**: Optimized animations and efficient state management
+7. **Maintainability**: Clean component structure and comprehensive documentation
+
+### Time Spent
+- Planning and design: 15 minutes
+- Implementation: 45 minutes
+- Testing and refinement: 15 minutes
+- Documentation: 30 minutes
+- **Total: ~1.75 hours**
+
+---
+
+**Implementation Complete:** All UI redesign requirements have been successfully implemented, tested, and documented. The application now features comprehensive IBM branding, enhanced user experience, and seamless IBM Bob integration.

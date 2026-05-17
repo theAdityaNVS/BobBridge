@@ -2,7 +2,8 @@
 
 **Date:** 2026-05-17
 **Hackathon:** lablab.ai IBM Bob Hackathon (May 15–17, 2026)
-**Status:** Approved, ready for implementation plan
+**Status:** Implemented with comprehensive UI redesign
+**Last Updated:** 2026-05-17
 **Time box:** 6–24 hours from spec approval
 
 ---
@@ -12,7 +13,10 @@
 Frontend teams are routinely blocked waiting for backend endpoints. BobBridge eliminates that wait: a plain-English description of an endpoint becomes (a) a live mock URL serving realistic JSON within seconds and (b) a Spring Boot scaffold a backend developer — or **IBM Bob** — can pick up and implement.
 
 **Hybrid Bob framing (judging criterion alignment):**
-BobBridge does not call Bob directly. Instead, it produces a contract + scaffold + a ready-to-paste BobShell prompt. The narrative: **BobBridge generates the contract; Bob implements the system.** This satisfies "clear application of IBM Bob" without requiring Bob API access during the demo.
+BobBridge does not call Bob directly. Instead, it produces a contract + scaffold + a ready-to-paste IBM Bob prompt. The narrative: **BobBridge generates the contract; IBM Bob implements the system.** This satisfies "clear application of IBM Bob" without requiring Bob API access during the demo.
+
+**UI Enhancement (2026-05-17):**
+Comprehensive redesign with IBM branding, dedicated Bob handoff section, rotating AI tips banner, geographic region display, and professional terminology throughout. The interface now prominently features IBM watsonx.ai and IBM Bob branding with "Open IBM Bob" and "Install IBM Bob" action buttons.
 
 ---
 
@@ -36,15 +40,20 @@ BobBridge does not call Bob directly. Instead, it produces a contract + scaffold
 
 ## 3. User Flow
 
-1. User lands on `/`.
-2. Enters a plain-English endpoint description, optionally selects HTTP method, optionally provides a path slug.
-3. Clicks **Unblock Team**. Loading state: skeleton + "Granite is drafting your contract…"
-4. ~3–8s later, results appear in three tabs:
-   - **JSON preview** — collapsible tree of the mock response
-   - **Java boilerplate** — Shiki-highlighted Spring Boot controller with copy button
-   - **Hand off to Bob** — copy-paste BobShell prompt
-5. Live endpoint URL is prominently displayed with copy button and `curl` example.
-6. A "Recent endpoints (this session)" list appears below — client-state only, no persistence.
+1. User lands on `/` and sees rotating AI tips banner with educational content.
+2. Enters a plain-English endpoint description, optionally selects HTTP method, path slug, and AI model.
+3. Clicks **Generate Mock & Contract** (IBM gradient button). Loading state shows selected model name.
+4. ~3–8s later, page auto-scrolls to results showing:
+   - **Mock endpoint** with region badge (e.g., "us-south") and model information
+   - **JSON preview** tab with copy button
+   - **Java boilerplate** tab with syntax highlighting
+5. **Dedicated Bob Handoff Section** appears below with:
+   - Ready-to-paste IBM Bob prompt
+   - "Open IBM Bob" button (VS Code integration ready)
+   - "Install IBM Bob" button (links to marketplace)
+   - Next steps guide
+6. Live endpoint URL prominently displayed with copy and open buttons.
+7. "Recent endpoints (this session)" list shows previous generations with region badges.
 
 ---
 
@@ -56,26 +65,38 @@ BobBridge does not call Bob directly. Instead, it produces a contract + scaffold
 BobBridge/
 ├── app/
 │   ├── layout.tsx
-│   ├── page.tsx                  # main UI
-│   ├── globals.css
+│   ├── page.tsx                      # main UI with IBM branding
+│   ├── globals.css                   # IBM Blue color palette
 │   └── api/
-│       ├── generate/route.ts     # POST: prompt → result
-│       └── mock/[id]/route.ts    # GET/POST/PUT/DELETE/OPTIONS
+│       ├── generate/route.ts         # POST: prompt → result (with region)
+│       └── mock/[id]/route.ts        # GET/POST/PUT/DELETE/OPTIONS
 ├── components/
-│   ├── prompt-form.tsx
-│   ├── result-panel.tsx
-│   ├── code-block.tsx            # shiki-rendered
-│   ├── json-viewer.tsx
-│   └── ui/                       # shadcn primitives
+│   ├── ai-tips-banner.tsx            # NEW: Rotating tips banner
+│   ├── bob-handoff-section.tsx       # NEW: Dedicated Bob integration
+│   ├── prompt-form.tsx               # Model selector
+│   ├── result-panel.tsx              # Enhanced with region display
+│   ├── code-block.tsx                # Syntax highlighting
+│   ├── theme-toggle.tsx              # Dark/light mode
+│   └── ui/                           # shadcn primitives
 ├── lib/
-│   ├── watsonx.ts                # IAM token + textChat wrapper
-│   ├── prompt.ts                 # system prompt template
-│   ├── parse.ts                  # robust JSON extraction
-│   ├── store.ts                  # in-memory Map
-│   └── bob-handoff.ts            # BobShell prompt generator
-├── scripts/smoke.sh
+│   ├── watsonx.ts                    # IAM token + textChat wrapper
+│   ├── prompt.ts                     # system prompt template
+│   ├── parse.ts                      # robust JSON extraction
+│   ├── store.ts                      # in-memory Map
+│   ├── bob-handoff.ts                # IBM Bob prompt generator
+│   ├── types.ts                      # shared types (with region/model)
+│   ├── env.ts                        # environment validation
+│   └── utils.ts                      # cn helper
+├── scripts/
+│   ├── smoke.ps1
+│   └── smoke.sh
+├── docs/
+│   └── superpowers/
+│       ├── plans/
+│       └── specs/
 ├── .env.example
 ├── README.md
+├── UI_IMPROVEMENTS.md                # Comprehensive UI documentation
 └── package.json
 ```
 
@@ -210,7 +231,15 @@ Wire up: data layer (JPA entity + repository), input validation,
 integration tests, and OpenAPI spec entry.
 ```
 
-The UI surfaces this in the "Hand off to Bob" tab with a copy button.
+**UI Implementation (Enhanced):**
+The prompt is now displayed in a dedicated `BobHandoffSection` component with:
+- Prominent card with IBM gradient border
+- "Ready for IBM Bob 🤖" heading with AI Assistant badge
+- Copy button for the prompt
+- "Open IBM Bob" button (VS Code protocol handler ready)
+- "Install IBM Bob" button (links to VS Code marketplace)
+- Next steps guide with bullet points
+- Mock URL reference for frontend testing
 
 ---
 
@@ -272,3 +301,49 @@ To be detailed by the `writing-plans` skill after this spec is approved. High-le
 - OpenAPI export (only mentioned in Bob handoff text)
 - Rate limiting
 - Analytics
+
+---
+
+## 14. UI Redesign Implementation (2026-05-17)
+
+### IBM Branding
+- **Color Palette**: Official IBM Blue (#0f62fe) with full scale (10-100)
+- **Gradients**: Custom `.ibm-gradient` and `.ibm-text-gradient` utilities
+- **Typography**: IBM design language with proper hierarchy
+- **Components**: All UI elements updated with IBM styling
+
+### New Components
+1. **AITipsBanner** (`components/ai-tips-banner.tsx`)
+   - 10 rotating educational tips
+   - Auto-rotates every 6 seconds
+   - Pauses on hover
+   - Dismissible with close button
+   - Progress indicators
+
+2. **BobHandoffSection** (`components/bob-handoff-section.tsx`)
+   - Dedicated section for IBM Bob integration
+   - Action buttons: "Open IBM Bob" and "Install IBM Bob"
+   - Next steps guide
+   - Mock URL reference
+   - IBM gradient styling
+
+### Enhanced Features
+- **Region Display**: Shows watsonx.ai region (extracted from WATSONX_URL)
+- **Model Information**: Displays which AI model was used
+- **Auto-scroll**: Automatically scrolls to results after generation
+- **Professional Terminology**: "Generate Mock & Contract" instead of "Unblock Team"
+- **Enhanced Header**: IBM watsonx.ai and IBM Bob branding
+- **Improved Footer**: IBM Bob attribution
+
+### Technical Implementation
+- Updated `lib/types.ts` with `region` and `modelUsed` fields
+- Modified `app/api/generate/route.ts` to extract and return region
+- Enhanced `components/result-panel.tsx` with region/model display
+- Updated `components/prompt-form.tsx` with IBM gradient button
+- Redesigned `app/page.tsx` with new layout and auto-scroll
+- Added IBM Blue color palette to `app/globals.css`
+
+### Documentation Updates
+- Comprehensive `UI_IMPROVEMENTS.md` with all changes documented
+- Updated `README.md` with new features and UI redesign section
+- This design spec updated with implementation details
