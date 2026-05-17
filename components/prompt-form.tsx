@@ -127,17 +127,17 @@ export function PromptForm({ onResult, onError }: Props) {
         type="submit"
         disabled={loading || !prompt.trim()}
         size="lg"
-        className="w-full transition-all hover:scale-[1.02] active:scale-[0.98]"
+        className="w-full ibm-gradient text-white hover:opacity-90 transition-all"
       >
         {loading ? (
           <>
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            {selectedModel?.label} is drafting your contract…
+            {selectedModel?.label} is generating your contract…
           </>
         ) : (
           <>
             <Zap className="mr-2 h-5 w-5" />
-            Unblock Team
+            Generate Mock & Contract
           </>
         )}
       </Button>

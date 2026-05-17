@@ -5,6 +5,7 @@ import { generateContract } from '@/lib/watsonx';
 import { parseContract, MalformedContractError } from '@/lib/parse';
 import { mockStore } from '@/lib/store';
 import { buildBobPrompt } from '@/lib/bob-handoff';
+import { env } from '@/lib/env';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -80,6 +81,11 @@ export async function POST(req: NextRequest) {
   mockStore.put(entry);
 
   const origin = req.nextUrl.origin;
+  
+  // Extract region from WATSONX_URL (e.g., "us-south" from "https://us-south.ml.cloud.ibm.com")
+  const regionMatch = env.WATSONX_URL.match(/https:\/\/([^.]+)\./);
+  const region = regionMatch ? regionMatch[1] : 'unknown';
+  
   return NextResponse.json({
     id,
     mockUrl: `${origin}/api/mock/${id}`,
@@ -88,6 +94,8 @@ export async function POST(req: NextRequest) {
     bobHandoff: buildBobPrompt(entry),
     method: entry.method,
     path,
+    region,
+    modelUsed: body.modelId || env.WATSONX_MODEL_ID,
   });
 }
 

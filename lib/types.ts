@@ -7,6 +7,8 @@ export interface GenerateResponse {
   bobHandoff: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   path: string;
+  region?: string;
+  modelUsed?: string;
 }
 
 // Made with Bob

@@ -1,50 +1,71 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { PromptForm } from '@/components/prompt-form';
 import { ResultPanel } from '@/components/result-panel';
+import { BobHandoffSection } from '@/components/bob-handoff-section';
+import { AITipsBanner } from '@/components/ai-tips-banner';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, Zap, Code2 } from 'lucide-react';
+import { Sparkles, Zap, Code2, Rocket } from 'lucide-react';
 import type { GenerateResponse } from '@/lib/types';
 
 export default function Home() {
   const [results, setResults] = useState<GenerateResponse[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const mockResultRef = useRef<HTMLDivElement>(null);
+  const bobHandoffRef = useRef<HTMLDivElement>(null);
   const latest = results[0];
 
+  // Auto-scroll to mock result when generated
+  useEffect(() => {
+    if (latest && mockResultRef.current) {
+      setTimeout(() => {
+        mockResultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [latest]);
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      {/* Hero Section */}
+    <main className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+      {/* AI Tips Banner */}
+      <AITipsBanner />
+
+      {/* Hero Section with IBM Branding */}
       <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="max-w-5xl mx-auto px-4 py-8 sm:py-12">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <Zap className="h-6 w-6 text-primary" />
+              <div className="p-2 rounded-lg ibm-gradient">
+                <Zap className="h-6 w-6 text-white" />
               </div>
-              <h1 className="text-4xl sm:text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                BobBridge
-              </h1>
+              <div>
+                <h1 className="text-4xl sm:text-5xl font-bold tracking-tight ibm-text-gradient">
+                  BobBridge
+                </h1>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Powered by IBM watsonx.ai & IBM Bob
+                </p>
+              </div>
             </div>
             <ThemeToggle />
           </div>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl">
-            Describe an endpoint. Get a live mock and a Bob-ready Spring Boot scaffold.
+            Describe an endpoint. Get a live mock and a Bob-ready Spring Boot scaffold instantly.
           </p>
           <div className="flex flex-wrap gap-4 mt-6">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Sparkles className="h-4 w-4" />
-              <span>AI-Powered</span>
+              <Sparkles className="h-4 w-4 text-primary" />
+              <span>IBM watsonx.ai Powered</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Code2 className="h-4 w-4" />
-              <span>Instant Mocks</span>
+              <Code2 className="h-4 w-4 text-primary" />
+              <span>Instant Mock APIs</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Zap className="h-4 w-4" />
-              <span>Frontend Unblocked</span>
+              <Rocket className="h-4 w-4 text-primary" />
+              <span>Development Accelerated</span>
             </div>
           </div>
         </div>
@@ -67,8 +88,16 @@ export default function Home() {
         )}
 
         {latest && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div ref={mockResultRef} className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <ResultPanel result={latest} />
+            
+            {/* Dedicated Bob Handoff Section */}
+            <div ref={bobHandoffRef} id="bob-handoff">
+              <BobHandoffSection 
+                bobHandoff={latest.bobHandoff} 
+                mockUrl={latest.mockUrl}
+              />
+            </div>
           </div>
         )}
 
@@ -88,6 +117,11 @@ export default function Home() {
                 >
                   <Badge variant="outline" className="shrink-0">{r.method}</Badge>
                   <code className="font-mono text-sm truncate flex-1">{r.mockUrl}</code>
+                  {r.region && (
+                    <Badge variant="secondary" className="shrink-0 text-xs">
+                      {r.region}
+                    </Badge>
+                  )}
                 </div>
               ))}
             </div>
@@ -95,9 +129,12 @@ export default function Home() {
         )}
       </div>
 
-      {/* Footer */}
+      {/* Footer with IBM Branding */}
       <footer className="border-t mt-16 py-6 text-center text-sm text-muted-foreground">
-        <p>Made with Bob • Powered by IBM watsonx.ai</p>
+        <div className="space-y-2">
+          <p className="font-medium">Built with IBM Bob 🤖</p>
+          <p>Powered by IBM watsonx.ai • Accelerating Development with AI</p>
+        </div>
       </footer>
     </main>
   );
