@@ -1,17 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Zap, Loader2, Sparkles } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Zap, Loader2, Sparkles, ShieldAlert } from 'lucide-react';
+import { validatePrompt } from '@/lib/validation';
 import type { GenerateResponse } from '@/lib/types';
 
 interface Props {
   onResult: (r: GenerateResponse) => void;
   onError: (msg: string) => void;
+  initialPrompt?: string;
+  initialMethod?: 'GET' | 'POST' | 'PUT' | 'DELETE';
 }
 
 // Chat-capable models from models.md
@@ -24,16 +29,32 @@ const MODELS = [
   { id: 'mistralai/mistral-small-3-1-24b-instruct-2503', label: 'Mistral Small', description: 'Quick responses' },
 ] as const;
 
-export function PromptForm({ onResult, onError }: Props) {
-  const [prompt, setPrompt] = useState('');
-  const [method, setMethod] = useState<'GET' | 'POST' | 'PUT' | 'DELETE'>('GET');
+export function PromptForm({ onResult, onError, initialPrompt = '', initialMethod = 'GET' }: Props) {
+  const [prompt, setPrompt] = useState(initialPrompt);
+  const [method, setMethod] = useState<'GET' | 'POST' | 'PUT' | 'DELETE'>(initialMethod);
   const [pathSlug, setPathSlug] = useState('');
   const [modelId, setModelId] = useState<string>(MODELS[0].id);
   const [loading, setLoading] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  // Update prompt and method when props change
+  useEffect(() => {
+    if (initialPrompt) setPrompt(initialPrompt);
+    if (initialMethod) setMethod(initialMethod);
+  }, [initialPrompt, initialMethod]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!prompt.trim()) return;
+    
+    // Validate input for sensitive content
+    const validation = validatePrompt(prompt);
+    if (!validation.isValid) {
+      setValidationError(validation.error || 'Invalid input');
+      return;
+    }
+    
+    setValidationError(null);
     setLoading(true);
     try {
       const res = await fetch('/api/generate', {
@@ -59,15 +80,26 @@ export function PromptForm({ onResult, onError }: Props) {
   return (
     <form onSubmit={submit} className="space-y-5">
       <div className="space-y-2">
-        <Label htmlFor="prompt" className="text-base font-semibold">Describe your endpoint</Label>
+        <Label htmlFor="prompt" className="text-lg font-bold text-gradient-animate">
+          Describe Your Endpoint
+        </Label>
         <Textarea
           id="prompt"
           rows={5}
           value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
+          onChange={(e) => {
+            setPrompt(e.target.value);
+            setValidationError(null);
+          }}
           placeholder="e.g., Fetch user order history with item name, price, and status"
           className="mt-2 resize-none focus-visible:ring-2 focus-visible:ring-primary transition-all"
         />
+        {validationError && (
+          <Alert variant="destructive" className="mt-2">
+            <ShieldAlert className="h-4 w-4" />
+            <AlertDescription>{validationError}</AlertDescription>
+          </Alert>
+        )}
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -98,9 +130,12 @@ export function PromptForm({ onResult, onError }: Props) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="model" className="text-sm font-medium flex items-center gap-1">
-            <Sparkles className="h-3.5 w-3.5" />
+          <Label htmlFor="model" className="text-sm font-medium flex items-center gap-2">
+            <Sparkles className="h-3.5 w-3.5 text-primary" />
             AI Model
+            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-xs">
+              Powered by IBM Watson
+            </Badge>
           </Label>
           <Select value={modelId} onValueChange={setModelId}>
             <SelectTrigger id="model" className="mt-2">
@@ -118,9 +153,12 @@ export function PromptForm({ onResult, onError }: Props) {
       </div>
 
       {selectedModel && (
-        <p className="text-xs text-muted-foreground">
-          Using <span className="font-medium">{selectedModel.label}</span> — {selectedModel.description}
-        </p>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span>Using <span className="font-medium text-foreground">{selectedModel.label}</span> — {selectedModel.description}</span>
+          <Badge variant="outline" className="text-xs">
+            watsonx.ai
+          </Badge>
+        </div>
       )}
 
       <Button

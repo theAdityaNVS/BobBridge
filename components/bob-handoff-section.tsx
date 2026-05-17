@@ -20,16 +20,18 @@ export function BobHandoffSection({ bobHandoff, mockUrl }: Props) {
   }
 
   function openBob() {
-    // This would open IBM Bob if installed
+    // IBM Bob is a VS Code fork (similar to Antigravity)
     toast.info('Opening IBM Bob...', {
-      description: 'Make sure IBM Bob extension is installed in VS Code',
+      description: 'IBM Bob is a VS Code fork with AI capabilities built-in',
     });
-    // In a real implementation, this would use a custom protocol handler
-    // window.location.href = 'vscode://ibm.bob';
+    // In a real implementation, this would launch the IBM Bob application
+    // For now, direct to the download page
+    window.open('https://github.com/IBM/bob', '_blank');
   }
 
   function installBob() {
-    window.open('https://marketplace.visualstudio.com/items?itemName=IBM.bob', '_blank');
+    // IBM Bob is a standalone application, not an extension
+    window.open('https://github.com/IBM/bob', '_blank');
   }
 
   return (
@@ -37,14 +39,17 @@ export function BobHandoffSection({ bobHandoff, mockUrl }: Props) {
       <CardHeader className="space-y-3 pb-4">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-2 flex-1">
-            <div className="flex items-center gap-2">
-              <CardTitle className="text-2xl ibm-text-gradient">Ready for IBM Bob 🤖</CardTitle>
+            <div className="flex items-center gap-3">
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <span className="ibm-text-gradient">Ready for IBM Bob</span>
+                <span className="text-2xl filter-none" role="img" aria-label="robot" style={{ filter: 'none' }}>🤖</span>
+              </CardTitle>
               <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
-                AI Assistant
+                AI-Powered IDE
               </Badge>
             </div>
             <CardDescription className="text-base">
-              Hand off this contract to IBM Bob to complete the implementation with data layer, validation, and tests
+              Hand off this contract to IBM Bob (a VS Code fork with AI capabilities) to complete the implementation with data layer, validation, and tests
             </CardDescription>
           </div>
         </div>
@@ -80,7 +85,7 @@ export function BobHandoffSection({ bobHandoff, mockUrl }: Props) {
             className="ibm-gradient text-white hover:opacity-90 transition-opacity gap-2"
           >
             <ExternalLink className="h-5 w-5" />
-            Open IBM Bob
+            Launch IBM Bob
           </Button>
           <Button
             onClick={installBob}
@@ -89,7 +94,7 @@ export function BobHandoffSection({ bobHandoff, mockUrl }: Props) {
             className="border-primary/30 hover:bg-primary/5 gap-2"
           >
             <Download className="h-5 w-5" />
-            Install IBM Bob
+            Download IBM Bob
           </Button>
         </div>
 
@@ -100,7 +105,7 @@ export function BobHandoffSection({ bobHandoff, mockUrl }: Props) {
           </p>
           <ul className="text-sm text-muted-foreground space-y-1 ml-4 list-disc">
             <li>Copy the prompt above</li>
-            <li>Open IBM Bob in VS Code</li>
+            <li>Launch IBM Bob (a VS Code fork with built-in AI)</li>
             <li>Paste the prompt to generate complete implementation</li>
             <li>Bob will add JPA entities, repositories, validation, and tests</li>
           </ul>

@@ -6,8 +6,8 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "BobBridge — Frontend Unblocked",
-  description: "Turn endpoint descriptions into live mocks and Bob-ready Spring Boot scaffolds",
+  title: "BobBridge — AI-Powered API Development",
+  description: "Turn endpoint descriptions into live mocks and IBM Bob-ready Spring Boot scaffolds. Powered by IBM watsonx.ai and IBM Bob (VS Code fork with AI capabilities).",
 };
 
 export default function RootLayout({

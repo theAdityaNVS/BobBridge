@@ -13,10 +13,10 @@
 Frontend teams are routinely blocked waiting for backend endpoints. BobBridge eliminates that wait: a plain-English description of an endpoint becomes (a) a live mock URL serving realistic JSON within seconds and (b) a Spring Boot scaffold a backend developer — or **IBM Bob** — can pick up and implement.
 
 **Hybrid Bob framing (judging criterion alignment):**
-BobBridge does not call Bob directly. Instead, it produces a contract + scaffold + a ready-to-paste IBM Bob prompt. The narrative: **BobBridge generates the contract; IBM Bob implements the system.** This satisfies "clear application of IBM Bob" without requiring Bob API access during the demo.
+BobBridge does not call Bob directly. Instead, it produces a contract + scaffold + a ready-to-paste IBM Bob prompt. The narrative: **BobBridge generates the contract; IBM Bob (a VS Code fork with AI capabilities, similar to Antigravity) implements the system.** This satisfies "clear application of IBM Bob" without requiring Bob API access during the demo.
 
 **UI Enhancement (2026-05-17):**
-Comprehensive redesign with IBM branding, dedicated Bob handoff section, rotating AI tips banner, geographic region display, and professional terminology throughout. The interface now prominently features IBM watsonx.ai and IBM Bob branding with "Open IBM Bob" and "Install IBM Bob" action buttons.
+Comprehensive redesign with IBM branding, IBM watsonx.ai logo integration, dedicated Bob handoff section with 2-column layout, rotating AI tips banner, geographic region display, input validation guardrails, and professional terminology throughout. The interface now prominently features IBM watsonx.ai logo and IBM Bob branding with "Launch IBM Bob" and "Download IBM Bob" action buttons. Added security features to prevent generation of sensitive content.
 
 ---
 
@@ -40,20 +40,22 @@ Comprehensive redesign with IBM branding, dedicated Bob handoff section, rotatin
 
 ## 3. User Flow
 
-1. User lands on `/` and sees rotating AI tips banner with educational content.
-2. Enters a plain-English endpoint description, optionally selects HTTP method, path slug, and AI model.
+1. User lands on `/` and sees rotating AI tips banner with educational content and IBM watsonx.ai logo.
+2. Enters a plain-English endpoint description (validated for sensitive content), optionally selects HTTP method, path slug, and AI model.
 3. Clicks **Generate Mock & Contract** (IBM gradient button). Loading state shows selected model name.
-4. ~3–8s later, page auto-scrolls to results showing:
-   - **Mock endpoint** with region badge (e.g., "us-south") and model information
-   - **JSON preview** tab with copy button
-   - **Java boilerplate** tab with syntax highlighting
-5. **Dedicated Bob Handoff Section** appears below with:
+4. ~3–8s later, page auto-scrolls to results showing **2-column layout** (on larger screens):
+   - **Left Column**: Mock endpoint with region badge (e.g., "us-south") and model information, JSON preview tab, Java boilerplate tab
+   - **Right Column**: Dedicated Bob Handoff Section (appears with smooth animation after auto-scroll)
+5. **Bob Handoff Section** features:
    - Ready-to-paste IBM Bob prompt
-   - "Open IBM Bob" button (VS Code integration ready)
-   - "Install IBM Bob" button (links to marketplace)
+   - "Launch IBM Bob" button (opens IBM Bob application)
+   - "Download IBM Bob" button (links to IBM Bob repository)
+   - Clear explanation that IBM Bob is a VS Code fork
+   - Sticky positioning on scroll
    - Next steps guide
 6. Live endpoint URL prominently displayed with copy and open buttons.
-7. "Recent endpoints (this session)" list shows previous generations with region badges.
+7. Manual scroll adjustment: Bob section visibility adjusts based on scroll position.
+8. "Recent endpoints (this session)" list shows previous generations with region badges.
 
 ---
 
@@ -71,9 +73,10 @@ BobBridge/
 │       ├── generate/route.ts         # POST: prompt → result (with region)
 │       └── mock/[id]/route.ts        # GET/POST/PUT/DELETE/OPTIONS
 ├── components/
-│   ├── ai-tips-banner.tsx            # NEW: Rotating tips banner
-│   ├── bob-handoff-section.tsx       # NEW: Dedicated Bob integration
-│   ├── prompt-form.tsx               # Model selector
+│   ├── ai-tips-banner.tsx            # Rotating tips banner
+│   ├── bob-handoff-section.tsx       # Dedicated Bob integration with 2-column layout
+│   ├── ibm-logo.tsx                  # NEW: IBM watsonx.ai logo component
+│   ├── prompt-form.tsx               # Model selector with validation
 │   ├── result-panel.tsx              # Enhanced with region display
 │   ├── code-block.tsx                # Syntax highlighting
 │   ├── theme-toggle.tsx              # Dark/light mode
@@ -84,6 +87,7 @@ BobBridge/
 │   ├── parse.ts                      # robust JSON extraction
 │   ├── store.ts                      # in-memory Map
 │   ├── bob-handoff.ts                # IBM Bob prompt generator
+│   ├── validation.ts                 # NEW: Input validation and guardrails
 │   ├── types.ts                      # shared types (with region/model)
 │   ├── env.ts                        # environment validation
 │   └── utils.ts                      # cn helper
@@ -310,6 +314,7 @@ To be detailed by the `writing-plans` skill after this spec is approved. High-le
 - **Color Palette**: Official IBM Blue (#0f62fe) with full scale (10-100)
 - **Gradients**: Custom `.ibm-gradient` and `.ibm-text-gradient` utilities
 - **Typography**: IBM design language with proper hierarchy
+- **Logo Integration**: IBM watsonx.ai logo component in header and footer
 - **Components**: All UI elements updated with IBM styling
 
 ### New Components
@@ -322,18 +327,36 @@ To be detailed by the `writing-plans` skill after this spec is approved. High-le
 
 2. **BobHandoffSection** (`components/bob-handoff-section.tsx`)
    - Dedicated section for IBM Bob integration
-   - Action buttons: "Open IBM Bob" and "Install IBM Bob"
+   - 2-column layout with sticky positioning
+   - Action buttons: "Launch IBM Bob" and "Download IBM Bob"
+   - Clear IBM Bob description (VS Code fork)
    - Next steps guide
    - Mock URL reference
    - IBM gradient styling
+   - Smooth animation on appearance
+
+3. **IBMWatsonxLogo** (`components/ibm-logo.tsx`)
+   - SVG-based IBM watsonx.ai logo
+   - Scalable and theme-aware
+   - Used in header and footer
+
+4. **Input Validation** (`lib/validation.ts`)
+   - Comprehensive guardrails for sensitive content
+   - Blocks passwords, credentials, SQL queries
+   - Real-time validation feedback
+   - Clear error messages
 
 ### Enhanced Features
 - **Region Display**: Shows watsonx.ai region (extracted from WATSONX_URL)
 - **Model Information**: Displays which AI model was used
-- **Auto-scroll**: Automatically scrolls to results after generation
+- **2-Column Layout**: Mock result and Bob handoff side-by-side on larger screens
+- **Smart Auto-scroll**: Automatically scrolls to results with delayed Bob section appearance
+- **Manual Scroll Adjustment**: Bob section visibility adjusts based on scroll position
 - **Professional Terminology**: "Generate Mock & Contract" instead of "Unblock Team"
-- **Enhanced Header**: IBM watsonx.ai and IBM Bob branding
-- **Improved Footer**: IBM Bob attribution
+- **Enhanced Header**: IBM watsonx.ai logo and IBM Bob branding
+- **Improved Footer**: IBM Bob attribution with logo
+- **Input Security**: Validation guardrails prevent sensitive content generation
+- **Fixed Emoji Display**: Robot emoji properly displayed without color issues
 
 ### Technical Implementation
 - Updated `lib/types.ts` with `region` and `modelUsed` fields

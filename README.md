@@ -8,15 +8,17 @@
 
 Plain-English prompt → IBM watsonx.ai (Granite/Llama/Mistral models) → strict-JSON contract → in-memory mock served at `/api/mock/{id}` + Spring Boot controller scaffold + ready-to-paste IBM Bob prompt.
 
-**The thesis:** BobBridge produces the contract; IBM Bob implements the system.
+**The thesis:** BobBridge produces the contract; IBM Bob (a VS Code fork with AI capabilities, similar to Antigravity) implements the system.
 
 ## Key Features
 
-- 🎨 **IBM Branding**: Official IBM Blue color palette and design language throughout
-- 🤖 **IBM Bob Integration**: Dedicated handoff section with "Open IBM Bob" and "Install IBM Bob" buttons
+- 🎨 **IBM Branding**: Official IBM Blue color palette, IBM watsonx.ai logo, and design language throughout
+- 🤖 **IBM Bob Integration**: Dedicated handoff section with "Launch IBM Bob" and "Download IBM Bob" buttons
+- 🔒 **Input Guardrails**: Prevents generation of sensitive content (passwords, SQL queries, etc.)
+- 📐 **2-Column Layout**: Mock result and Bob handoff displayed side-by-side on larger screens
 - 🌐 **Region Display**: Shows geographic region (e.g., us-south) for API endpoints
 - 💡 **AI Tips Banner**: Rotating educational tips about features and best practices
-- ⚡ **Auto-scroll**: Automatically scrolls to results after generation
+- ⚡ **Smart Auto-scroll**: Automatically scrolls to results with manual scroll adjustment
 - 🎯 **Model Selection**: Choose from 6 AI models (Granite, Llama, Mistral)
 - 📊 **Enhanced Results**: Display model used and region information
 
@@ -59,10 +61,11 @@ See `docs/superpowers/specs/2026-05-17-bobbridge-design.md`.
 ## UI Components
 
 - **AITipsBanner**: Rotating educational tips with pause on hover
-- **BobHandoffSection**: Dedicated section for IBM Bob integration
+- **BobHandoffSection**: Dedicated section for IBM Bob integration with 2-column layout
 - **ResultPanel**: Enhanced with region and model information
-- **PromptForm**: Model selector with descriptions
+- **PromptForm**: Model selector with input validation and guardrails
 - **ThemeToggle**: Dark/light mode with IBM branding
+- **IBMWatsonxLogo**: IBM watsonx.ai logo component for branding
 
 ## Project Structure
 
@@ -167,18 +170,28 @@ Set environment variables in Vercel dashboard or CLI:
 - **Professional Terminology**: Replaced "unblock team" with "Generate Mock & Contract"
 
 ### IBM Bob Integration
-- "Open IBM Bob" button (with VS Code protocol handler ready)
-- "Install IBM Bob" button (links to VS Code marketplace)
-- Clear next steps guide for using IBM Bob
+- "Launch IBM Bob" button (opens IBM Bob application)
+- "Download IBM Bob" button (links to IBM Bob repository)
+- Clear explanation that IBM Bob is a VS Code fork with AI capabilities
+- 2-column layout with sticky positioning on larger screens
+- Auto-scroll with manual scroll adjustment
 - Copy-paste ready prompts for seamless handoff
+
+### Input Validation & Security
+- Comprehensive input guardrails to prevent sensitive content generation
+- Blocks passwords, credentials, SQL queries, system commands
+- Validates prompt length and content
+- Real-time validation feedback with clear error messages
 
 ## Credits
 
-**Built by IBM Bob** - An AI coding assistant that helped create this entire application, including:
+**Built by IBM Bob** - A VS Code fork with AI capabilities (similar to Antigravity) that helped create this entire application, including:
 - Architecture and design
 - Full-stack implementation (Next.js, TypeScript, React)
-- UI/UX improvements with IBM branding
+- UI/UX improvements with IBM branding and watsonx.ai logo
 - Integration with IBM watsonx.ai
+- Input validation and security guardrails
+- 2-column responsive layout with smart scrolling
 - Comprehensive documentation and testing
 - UI redesign with rotating tips banner and Bob handoff section
 

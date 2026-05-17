@@ -2,6 +2,10 @@
 
 This file provides guidance to agents when working with code in this repository.
 
+## IBM Bob Context
+
+IBM Bob is a VS Code fork with AI capabilities built-in, similar to Antigravity. It is NOT a VS Code extension but a standalone application. All references to IBM Bob should clarify this distinction.
+
 ## Non-Obvious Project Patterns
 
 ### Environment Variables
@@ -23,6 +27,24 @@ This file provides guidance to agents when working with code in this repository.
 - `app/api/mock/[id]/route.ts` serves same payload for ALL HTTP verbs (GET/POST/PUT/DELETE)
 - CORS headers hardcoded to `*` for demo purposes
 - Next.js 16 requires `await ctx.params` (async params API)
+
+### Input Validation
+- `lib/validation.ts` provides guardrails against sensitive content generation
+- Blocks passwords, credentials, SQL queries, system commands
+- Validates prompt length and content before AI generation
+- Real-time validation feedback in UI
+
+### UI Layout
+- 2-column layout on larger screens (mock result + Bob handoff)
+- Bob handoff section uses sticky positioning and smooth animations
+- Auto-scroll to results with delayed Bob section appearance
+- Manual scroll adjustment for Bob section visibility
+
+### IBM Branding
+- IBM watsonx.ai logo component in `components/ibm-logo.tsx`
+- Logo displayed in header and footer
+- IBM Blue color palette throughout
+- Robot emoji properly separated to avoid color issues
 
 ### Code Comments
 - All files end with `// Made with Bob` comment (project signature)
